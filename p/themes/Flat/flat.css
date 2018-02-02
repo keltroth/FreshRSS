@@ -10,7 +10,7 @@ html, body {
 
 /*=== Links */
 a, button.as-link {
-	color: #2980b9;
+	color: #444;
 	outline: none;
 }
 
@@ -43,7 +43,6 @@ input, select, textarea {
 	background: #fff;
 	color: #666;
 	border: none;
-	border-bottom: 3px solid #ddd;
 	border-left-color: #ddd;
 	border-radius: 5px;
 	min-height: 25px;
@@ -100,7 +99,6 @@ form th {
 .form-group {
 	padding: 5px;
 	border: 1px solid transparent;
-	border-radius: 3px;
 }
 
 .form-group::after {
@@ -120,7 +118,6 @@ form th {
 	padding: 5px 0;
 	background: #ecf0f1;
 	border-top: 3px solid #bdc3c7;
-	border-radius: 5px 5px 0 0;
 }
 
 .form-group.form-actions .btn {
@@ -153,18 +150,15 @@ form th {
 
 .stick input,
 .stick .btn {
-	border-radius: 0;
 }
 
 .stick .btn:first-child,
 .stick input:first-child {
-	border-radius: 5px 0 0 5px;
 }
 
 .stick .btn:last-child,
 .stick input:last-child,
 .stick .btn + .dropdown > .btn {
-	border-radius: 0 5px 5px 0;
 }
 
 .stick .btn + .btn,
@@ -188,7 +182,6 @@ form th {
 	color: #fff;
 	font-size: 0.9rem;
 	border: none;
-	border-bottom: 3px solid #2980b9;
 	border-left-color: #2980b9;
 	border-radius: 5px;
 	min-height: 38px;
@@ -201,7 +194,7 @@ form th {
 
 a.btn {
 	min-height: 25px;
-	line-height: 25px;
+	line-height: 22px;
 }
 
 .btn:hover {
@@ -219,7 +212,6 @@ a.btn {
 	font-weight: normal;
 	background: #e67e22;
 	color: #fff;
-	border-bottom: 3px solid #d35400;
 	border-left-color: #d35400;
 }
 
@@ -231,7 +223,6 @@ a.btn {
 .btn-attention {
 	background: #e74c3c;
 	color: #fff;
-	border-bottom: 3px solid #c0392b;
 	border-left-color: #c0392b;
 }
 
@@ -391,7 +382,6 @@ a.btn {
 .dropdown-menu .input input {
 	margin: 0 auto 5px;
 	padding: 2px 5px;
-	border-radius: 3px;
 }
 
 .separator {
@@ -482,7 +472,8 @@ a.btn {
 /*=== Boxes */
 .box {
 	border: 1px solid #ddd;
-	border-radius: 5px;
+	background: white;
+	width: 22rem;
 }
 
 .box .box-title {
@@ -491,11 +482,16 @@ a.btn {
 	background: #ecf0f1;
 	color: #333;
 	border-bottom: 1px solid #ddd;
-	border-radius: 5px 5px 0 0;
 }
 
 .box .box-content {
 	max-height: 260px;
+	height: 15rem;
+	overflow: auto;
+}
+
+.box .box-content-centered {
+	padding:0;
 }
 
 .box .box-content .item {
@@ -512,13 +508,17 @@ a.btn {
 .box .box-content .item .configure .icon {
 	vertical-align: middle;
 	background-color: #95a5a6;
-	border-radius: 3px;
 }
 
 .box .box-title:hover .configure,
 .box .box-content .item:hover .configure {
 	visibility: visible;
 }
+
+.box .box-content .item:hover .configure .icon {
+	background: transparent;
+}
+
 
 /*=== Tree */
 .tree {
@@ -621,21 +621,27 @@ a.btn {
 .header .item.search input:focus {
 	width: 350px;
 }
+.header .btn, .header .btn:hover, .header .btn:focus, .header .btn:active {
+	background-color: transparent ! important;
+}
 
 /*=== Body */
 #global {
 	height: calc(100% - 85px);
+	background-color:#34495e;
 }
 
 .aside {
-	background: #ecf0f1;
+	background: #34495e;
+}
+.aside a {
+	color:white;
 }
 
 .aside.aside_feed {
 	padding: 10px 0;
 	text-align: center;
 	background: #34495e;
-	border-radius: 0 10px 0 0;
 }
 
 .aside.aside_feed .tree {
@@ -686,13 +692,14 @@ a.btn {
 .aside_feed .tree-folder-items .item .dropdown-target:target ~ .dropdown-toggle > .icon,
 .aside_feed .tree-folder-items .item:hover .dropdown-toggle > .icon,
 .aside_feed .tree-folder-items .item.active .dropdown-toggle > .icon {
-	border-radius: 3px;
 }
 
 /*=== Configuration pages */
 .post {
 	padding: 10px 50px;
 	font-size: 0.9em;
+	background: white;
+	border-top-left-radius: 15px;
 }
 
 .post form {
@@ -701,6 +708,17 @@ a.btn {
 
 .post.content {
 	max-width: 550px;
+}
+.post #add_rss {
+	padding:5px;
+	background: #ecf0f1;
+	max-width:30rem;
+}
+.post #add_rss .stick {
+	width:100%;
+}
+.post #add_rss .stick input {
+	width:78%;
 }
 
 /*=== Prompt (centered) */
@@ -753,6 +771,7 @@ a.btn {
 	font-weight: bold;
 	line-height: 3em;
 	border-left: 2px solid #ecf0f1;
+	background-color:white;
 }
 
 .day .name {
@@ -768,17 +787,19 @@ a.btn {
 .nav_menu {
 	text-align: center;
 	padding: 5px 0;
+	background: white;
+	border-top-left-radius: 15px;
 }
 
 #dropdown-query ~ .dropdown-menu .dropdown-header .icon {
 	vertical-align: middle;
 	background-color: #95a5a6;
-	border-radius: 3px;
 }
 
 /*=== Feed articles */
 .flux {
 	border-left: 2px solid #ecf0f1;
+	background-color: #fff;
 }
 
 .flux:hover {
@@ -862,7 +883,6 @@ a.btn {
 	background: #222;
 	color: #fff;
 	font-size: 0.9rem;
-	border-radius: 3px;
 }
 
 .content code {
@@ -870,7 +890,6 @@ a.btn {
 	background: #fafafa;
 	color: #d14;
 	border: 1px solid #eee;
-	border-radius: 3px;
 }
 
 .content pre code {
@@ -921,7 +940,6 @@ a.btn {
 .notification a.close {
 	padding: 0 15px;
 	line-height: 3em;
-	border-radius: 0 3px 3px 0;
 }
 
 .notification.good a.close:hover {
@@ -1073,7 +1091,6 @@ a.btn {
 .log > .date {
 	margin: 0 10px 0 0;
 	padding: 5px 10px;
-	border-radius: 20px;
 }
 
 .log.error > .date {
@@ -1151,7 +1168,6 @@ a.btn {
 	}
 
 	.notification {
-		border-radius: 0;
 	}
 
 	.notification a.close {
