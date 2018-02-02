@@ -39,7 +39,7 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 	 * @throws FreshRSS_Feed_Exception
 	 * @throws Minz_FileNotExistException
 	 */
-	public static function addFeed($url, $title = '', $cat_id = 0, $new_cat_name = '', $http_auth = '') {
+	public static function addFeed($param_url, $title = '', $cat_id = 0, $new_cat_name = '', $http_auth = '') {
 		FreshRSS_UserDAO::touch();
 		@set_time_limit(300);
 
@@ -52,6 +52,8 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 		if (null === $url) {
 			throw new FreshRSS_FeedNotAdded_Exception($url, $title);
 		}
+
+		$url = trim($param_url);
 
 		$cat = null;
 		if ($new_cat_name != '') {
