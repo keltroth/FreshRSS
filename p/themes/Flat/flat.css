@@ -41,7 +41,7 @@ input, select, textarea {
 	line-height: 25px;
 	vertical-align: middle;
 	background: #fff;
-	border: none;
+	border: 1px solid #ecf0f1;
 	border-left-color: #ddd;
 	color: #666;
 }
@@ -75,7 +75,6 @@ table {
 
 tr, th, td {
 	padding: 0.5em;
-	border: 1px solid #ddd;
 }
 th {
 	background: #f6f6f6;
@@ -322,6 +321,7 @@ a.btn {
 	padding: 0 22px;
 	line-height: 2.5em;
 	font-size: 0.8rem;
+	color:#444;
 }
 .dropdown-menu > .item:hover {
 	background: #2980b9;
@@ -331,6 +331,7 @@ a.btn {
 	font-weight: bold;
 	margin: 0 0 0 -14px;
 }
+.dropdown-menu > .item:hover > button,
 .dropdown-menu > .item:hover > a {
 	text-decoration: none;
 	color: #fff;
@@ -1026,3 +1027,4 @@ a.btn {
 		display: none;
 	}
 }
+
