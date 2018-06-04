@@ -19,6 +19,7 @@ return array(
 		'see_website' => 'Siteyi gör',
 		'submit' => 'Onayla',
 		'truncate' => 'Tüm makaleleri sil',
+		'update' => 'Update', // TODO
 	),
 	'auth' => array(
 		'email' => 'Email adresleri',
@@ -169,6 +170,7 @@ return array(
 		'jdh' => 'Journal du hacker',
 		'mastodon' => 'Mastodon',
 		'movim' => 'Movim',
+		'pocket' => 'Pocket',
 		'print' => 'Print',
 		'shaarli' => 'Shaarli',
 		'twitter' => 'Twitter',

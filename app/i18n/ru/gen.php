@@ -19,6 +19,7 @@ return array(
 		'see_website' => 'See website',
 		'submit' => 'Submit',
 		'truncate' => 'Delete all articles',
+		'update' => 'Update', // TODO
 	),
 	'auth' => array(
 		'email' => 'Email address',
@@ -169,6 +170,7 @@ return array(
 		'jdh' => 'Journal du hacker',
 		'mastodon' => 'Mastodon',
 		'movim' => 'Movim',
+		'pocket' => 'Pocket',
 		'print' => 'Print',
 		'shaarli' => 'Shaarli',
 		'twitter' => 'Twitter',

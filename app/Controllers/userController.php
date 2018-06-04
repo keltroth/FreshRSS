@@ -44,27 +44,74 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 		return preg_match('/^' . self::USERNAME_PATTERN . '$/', $username) === 1;
 	}
 
-	public static function updateContextUser($passwordPlain, $apiPasswordPlain, $userConfigUpdated = array()) {
+	public static function deleteFeverKey($username) {
+		$userConfig = get_user_configuration($username);
+		if ($userConfig !== null && ctype_xdigit($userConfig->feverKey)) {
+			return @unlink(DATA_PATH . '/fever/.key-' . sha1(FreshRSS_Context::$system_conf->salt) . '-' . $userConfig->feverKey . '.txt');
+		}
+		return false;
+	}
+
+	public static function updateUser($user, $passwordPlain, $apiPasswordPlain, $userConfigUpdated = array()) {
+		$userConfig = get_user_configuration($user);
+		if ($userConfig === null) {
+			return false;
+		}
+
 		if ($passwordPlain != '') {
 			$passwordHash = self::hashPassword($passwordPlain);
-			FreshRSS_Context::$user_conf->passwordHash = $passwordHash;
+			$userConfig->passwordHash = $passwordHash;
 		}
 
 		if ($apiPasswordPlain != '') {
 			$apiPasswordHash = self::hashPassword($apiPasswordPlain);
-			FreshRSS_Context::$user_conf->apiPasswordHash = $apiPasswordHash;
+			$userConfig->apiPasswordHash = $apiPasswordHash;
+
+			@mkdir(DATA_PATH . '/fever/', 0770, true);
+			self::deleteFeverKey($user);
+			$userConfig->feverKey = strtolower(md5($user . ':' . $apiPasswordPlain));
+			$ok = file_put_contents(DATA_PATH . '/fever/.key-' . sha1(FreshRSS_Context::$system_conf->salt) . '-' . $userConfig->feverKey . '.txt', $user) !== false;
+
+			if (!$ok) {
+				Minz_Log::warning('Could not save API credentials for fever API', ADMIN_LOG);
+				return $ok;
+			}
 		}
 
 		if (is_array($userConfigUpdated)) {
 			foreach ($userConfigUpdated as $configName => $configValue) {
 				if ($configValue !== null) {
-					FreshRSS_Context::$user_conf->_param($configName, $configValue);
+					$userConfig->_param($configName, $configValue);
 				}
 			}
 		}
 
-		$ok = FreshRSS_Context::$user_conf->save();
+		$ok = $userConfig->save();
 		return $ok;
+	}
+
+	public function updateAction() {
+		if (Minz_Request::isPost()) {
+			$passwordPlain = Minz_Request::param('newPasswordPlain', '', true);
+			Minz_Request::_param('newPasswordPlain');	//Discard plain-text password ASAP
+			$_POST['newPasswordPlain'] = '';
+
+			$apiPasswordPlain = Minz_Request::param('apiPasswordPlain', '', true);
+
+			$username = Minz_Request::param('username');
+			$ok = self::updateUser($username, $passwordPlain, $apiPasswordPlain, array(
+				'token' => Minz_Request::param('token', null),
+			));
+
+			if ($ok) {
+				Minz_Request::good(_t('feedback.user.updated', $username),
+				                   array('c' => 'user', 'a' => 'manage'));
+			} else {
+				Minz_Request::bad(_t('feedback.user.updated.error', $username),
+				                  array('c' => 'user', 'a' => 'manage'));
+			}
+
+		}
 	}
 
 	/**
@@ -84,7 +131,7 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 
 			$apiPasswordPlain = Minz_Request::param('apiPasswordPlain', '', true);
 
-			$ok = self::updateContextUser($passwordPlain, $apiPasswordPlain, array(
+			$ok = self::updateUser(Minz_Session::param('currentUser'), $passwordPlain, $apiPasswordPlain, array(
 					'token' => Minz_Request::param('token', null),
 				));
 
@@ -110,19 +157,18 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 
 		Minz_View::prependTitle(_t('admin.user.title') . ' · ');
 
-		// Get the correct current user.
-		$username = Minz_Request::param('u', Minz_Session::param('currentUser'));
-		if (!FreshRSS_UserDAO::exist($username)) {
-			$username = Minz_Session::param('currentUser');
+		$this->view->current_user = Minz_Request::param('u');
+
+		$this->view->nb_articles = 0;
+		$this->view->size_user = 0;
+		if ($this->view->current_user) {
+			// Get information about the current user.
+			$entryDAO = FreshRSS_Factory::createEntryDao($this->view->current_user);
+			$this->view->nb_articles = $entryDAO->count();
+
+			$databaseDAO = FreshRSS_Factory::createDatabaseDAO();
+			$this->view->size_user = $databaseDAO->size();
 		}
-		$this->view->current_user = $username;
-
-		// Get information about the current user.
-		$entryDAO = FreshRSS_Factory::createEntryDao($this->view->current_user);
-		$this->view->nb_articles = $entryDAO->count();
-
-		$databaseDAO = FreshRSS_Factory::createDatabaseDAO();
-		$this->view->size_user = $databaseDAO->size();
 	}
 
 	public static function createUser($new_user_name, $passwordPlain, $apiPasswordPlain, $userConfig = array(), $insertDefaultFeeds = true) {
@@ -145,29 +191,15 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 			$ok &= !file_exists($configPath);
 		}
 		if ($ok) {
-			$passwordHash = '';
-			if ($passwordPlain != '') {
-				$passwordHash = self::hashPassword($passwordPlain);
-				$ok &= ($passwordHash != '');
-			}
-
-			$apiPasswordHash = '';
-			if ($apiPasswordPlain != '') {
-				$apiPasswordHash = self::hashPassword($apiPasswordPlain);
-				$ok &= ($apiPasswordHash != '');
-			}
-		}
-		if ($ok) {
 			if (!is_dir($homeDir)) {
 				mkdir($homeDir);
 			}
-			$userConfig['passwordHash'] = $passwordHash;
-			$userConfig['apiPasswordHash'] = $apiPasswordHash;
 			$ok &= (file_put_contents($configPath, "<?php\n return " . var_export($userConfig, true) . ';') !== false);
 		}
 		if ($ok) {
 			$userDAO = new FreshRSS_UserDAO();
 			$ok &= $userDAO->createUser($new_user_name, $userConfig['language'], $insertDefaultFeeds);
+			$ok &= self::updateUser($new_user_name, $passwordPlain, $apiPasswordPlain);
 		}
 		return $ok;
 	}
@@ -222,10 +254,9 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 			$ok &= (strcasecmp($username, $default_user) !== 0);	//It is forbidden to delete the default user
 		}
 		$user_data = join_path(DATA_PATH, 'users', $username);
+		$ok &= is_dir($user_data);
 		if ($ok) {
-			$ok &= is_dir($user_data);
-		}
-		if ($ok) {
+			self::deleteFeverKey($username);
 			$userDAO = new FreshRSS_UserDAO();
 			$ok &= $userDAO->deleteUser($username);
 			$ok &= recursive_unlink($user_data);

@@ -72,7 +72,7 @@ return array(
 			'already_subscribed' => 'Vous êtes déjà abonné à <em>%s</em>',
 			'deleted' => 'Le flux a été supprimé.',
 			'error' => 'Une erreur est survenue',
-			'internal_problem' => 'Le flux ne peut pas être ajouté. <a href="%s">Consulter les logs de FreshRSS</a> pour plus de détails.',
+			'internal_problem' => 'Le flux ne peut pas être ajouté. <a href="%s">Consulter les logs de FreshRSS</a> pour plus de détails. Vous pouvez essayer de forcer l’ajout par addition de <code>#force_feed</code> à l’URL.',
 			'invalid_url' => 'L’url <em>%s</em> est invalide.',
 			'marked_read' => 'Les flux ont été marqués comme lus.',
 			'n_actualized' => '%d flux ont été mis à jour.',
@@ -100,6 +100,10 @@ return array(
 		'deleted' => array(
 			'_' => 'L’utilisateur %s a été supprimé.',
 			'error' => 'L’utilisateur %s ne peut pas être supprimé.',
+		),
+		'updated' => array(
+			'_' => 'L’utilisateur %s a été mis à jour',
+			'error' => 'L’utilisateur %s n’a pas été mis à jour',
 		),
 	),
 	'profile' => array(

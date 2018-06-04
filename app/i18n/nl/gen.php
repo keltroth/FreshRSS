@@ -19,6 +19,7 @@ return array(
 		'see_website' => 'Bekijk website',
 		'submit' => 'Opslaan',
 		'truncate' => 'Verwijder alle artikelen',
+		'update' => 'Updaten',
 	),
 	'auth' => array(
 		'email' => 'Email adres',
@@ -169,6 +170,7 @@ return array(
 		'jdh' => 'Journal du hacker',
 		'mastodon' => 'Mastodon',
 		'movim' => 'Movim',
+		'pocket' => 'Pocket',
 		'print' => 'Print',
 		'shaarli' => 'Shaarli',
 		'twitter' => 'Twitter',

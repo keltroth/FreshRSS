@@ -72,7 +72,7 @@ return array(
 			'already_subscribed' => 'Hai già sottoscritto <em>%s</em>',
 			'deleted' => 'Feed cancellato',
 			'error' => 'Feed non aggiornato',
-			'internal_problem' => 'RSS feed non aggiunto. <a href="%s">Verifica i logs</a> per dettagli.',
+			'internal_problem' => 'RSS feed non aggiunto. <a href="%s">Verifica i logs</a> per dettagli.', // @todo
 			'invalid_url' => 'URL <em>%s</em> non valido',
 			'marked_read' => 'Feeds segnati come letti',
 			'n_actualized' => '%d feeds aggiornati',
@@ -100,6 +100,10 @@ return array(
 		'deleted' => array(
 			'_' => 'Utente %s cancellato',
 			'error' => 'Utente %s non cancellato',
+		),
+		'updated' => array(
+			'_' => 'User %s has been updated', // TODO
+			'error' => 'User %s has not been updated', // TODO
 		),
 	),
 	'profile' => array(

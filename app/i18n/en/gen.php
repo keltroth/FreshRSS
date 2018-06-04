@@ -19,6 +19,7 @@ return array(
 		'see_website' => 'See website',
 		'submit' => 'Submit',
 		'truncate' => 'Delete all articles',
+		'update' => 'Update',
 	),
 	'auth' => array(
 		'email' => 'Email address',
@@ -169,6 +170,7 @@ return array(
 		'Known' => 'Known based sites',
 		'mastodon' => 'Mastodon',
 		'movim' => 'Movim',
+		'pocket' => 'Pocket',
 		'print' => 'Print',
 		'shaarli' => 'Shaarli',
 		'twitter' => 'Twitter',
