@@ -23,6 +23,7 @@ Tested with:
 - iOS
   - [Fiery Feeds](https://itunes.apple.com/app/fiery-feeds-rss-reader/id1158763303)
   - [Unread](https://itunes.apple.com/app/unread-rss-reader/id1252376153)
+  - [Reeder-3](https://itunes.apple.com/app/reeder-3/id697846300)
 
 - MacOS
   - [Readkit](https://itunes.apple.com/app/readkit/id588726889)
@@ -43,7 +44,7 @@ Following features are implemented:
 - setting starred marker for item(s)
 - setting read marker for feed
 - setting read marker for category
-- supports FreshRSS extensions, which use th `entry_before_display` hook
+- supports FreshRSS extensions, which use the `entry_before_display` hook
 
 Following features are not supported:
 - **Hot Links** aka **hot** as there is nothing in FreshRSS yet that is similar or could be used to simulate it

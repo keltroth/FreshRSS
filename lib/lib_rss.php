@@ -21,6 +21,12 @@ if (!function_exists('json_encode')) {
 
 defined('JSON_UNESCAPED_UNICODE') or define('JSON_UNESCAPED_UNICODE', 256);	//PHP 5.3
 
+if (!function_exists('mb_strcut')) {
+	function mb_strcut($str, $start, $length = null, $encoding = 'UTF-8') {
+		return substr($str, $start, $length);
+	}
+}
+
 /**
  * Build a directory path by concatenating a list of directory names.
  *
@@ -96,6 +102,23 @@ function safe_ascii($text) {
 	return filter_var($text, FILTER_DEFAULT, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
 }
 
+function escapeToUnicodeAlternative($text, $extended = true) {
+	$text = htmlspecialchars_decode($text, ENT_QUOTES);
+
+	//Problematic characters
+	$problem = array('&', '<', '>');
+	//Use their fullwidth Unicode form instead:
+	$replace = array('＆', '＜', '＞');
+
+	// https://raw.githubusercontent.com/mihaip/google-reader-api/master/wiki/StreamId.wiki
+	if ($extended) {
+		$problem += array("'", '"', '^', '?', '\\', '/', ',', ';');
+		$replace += array("’", '＂', '＾', '？', '＼', '／', '，', '；');
+	}
+
+	return trim(str_replace($problem, $replace, $text));
+}
+
 /**
  * Test if a given server address is publicly accessible.
  *
@@ -103,24 +126,28 @@ function safe_ascii($text) {
  * localhost address.
  *
  * @param $address the address to test, can be an IP or a URL.
- * @return true if server is accessible, false else.
+ * @return true if server is accessible, false otherwise.
  * @todo improve test with a more valid technique (e.g. test with an external server?)
  */
 function server_is_public($address) {
 	$host = parse_url($address, PHP_URL_HOST);
 
 	$is_public = !in_array($host, array(
-		'127.0.0.1',
 		'localhost',
 		'localhost.localdomain',
 		'[::1]',
+		'ip6-localhost',
 		'localhost6',
 		'localhost6.localdomain6',
 	));
 
-	return $is_public;
-}
+	if ($is_public) {
+		$is_public &= !preg_match('/^(10|127|172[.]16|192[.]168)[.]/', $host);
+		$is_public &= !preg_match('/^(\[)?(::1$|fc00::|fe80::)/i', $host);
+	}
 
+	return (bool)$is_public;
+}
 
 function format_number($n, $precision = 0) {
 	// number_format does not seem to be Unicode-compatible
@@ -175,12 +202,19 @@ function html_only_entity_decode($text) {
 	return strtr($text, $htmlEntitiesOnly);
 }
 
+function prepareSyslog() {
+	return COPY_SYSLOG_TO_STDERR ? openlog("FreshRSS", LOG_PERROR | LOG_PID, LOG_USER) : false;
+}
+
 function customSimplePie($attributes = array()) {
 	$system_conf = Minz_Configuration::get('system');
 	$limits = $system_conf->limits;
 	$simplePie = new SimplePie();
 	$simplePie->set_useragent(FRESHRSS_USERAGENT);
 	$simplePie->set_syslog($system_conf->simplepie_syslog_enabled);
+	if ($system_conf->simplepie_syslog_enabled) {
+		prepareSyslog();
+	}
 	$simplePie->set_cache_location(CACHE_PATH);
 	$simplePie->set_cache_duration($limits['cache_duration']);
 
@@ -199,6 +233,7 @@ function customSimplePie($attributes = array()) {
 		'font', 'form', 'frame', 'frameset', 'html',
 		'link', 'input', 'marquee', 'meta', 'noscript',
 		'object', 'param', 'plaintext', 'script', 'style',
+		'svg',	//TODO: Support SVG after sanitizing and URL rewriting of xlink:href
 	));
 	$simplePie->strip_attributes(array_merge($simplePie->strip_attributes, array(
 		'autoplay', 'class', 'onload', 'onunload', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup',
@@ -251,68 +286,6 @@ function sanitizeHTML($data, $base = '') {
 		$simplePie->init();
 	}
 	return html_only_entity_decode($simplePie->sanitize->sanitize($data, SIMPLEPIE_CONSTRUCT_HTML, $base));
-}
-
-/* permet de récupérer le contenu d'un article pour un flux qui n'est pas complet */
-function get_content_by_parsing($url, $path, $attributes = array()) {
-	require_once(LIB_PATH . '/lib_phpQuery.php');
-	$system_conf = Minz_Configuration::get('system');
-	$limits = $system_conf->limits;
-	$feed_timeout = empty($attributes['timeout']) ? 0 : intval($attributes['timeout']);
-
-	if ($system_conf->simplepie_syslog_enabled) {
-		syslog(LOG_INFO, 'FreshRSS GET ' . SimplePie_Misc::url_remove_credentials($url));
-	}
-
-	$ch = curl_init();
-	curl_setopt_array($ch, array(
-		CURLOPT_URL => $url,
-		CURLOPT_REFERER => SimplePie_Misc::url_remove_credentials($url),
-		CURLOPT_HTTPHEADER => array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
-		CURLOPT_USERAGENT => FRESHRSS_USERAGENT,
-		CURLOPT_CONNECTTIMEOUT => $feed_timeout > 0 ? $feed_timeout : $limits['timeout'],
-		CURLOPT_TIMEOUT => $feed_timeout > 0 ? $feed_timeout : $limits['timeout'],
-		//CURLOPT_FAILONERROR => true;
-		CURLOPT_MAXREDIRS => 4,
-		CURLOPT_RETURNTRANSFER => true,
-	));
-	if (version_compare(PHP_VERSION, '5.6.0') >= 0 || ini_get('open_basedir') == '') {
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);	//Keep option separated for open_basedir PHP bug 65646
-	}
-	if (defined('CURLOPT_ENCODING')) {
-		curl_setopt($ch, CURLOPT_ENCODING, '');	//Enable all encodings
-	}
-	curl_setopt_array($ch, $system_conf->curl_options);
-	if (isset($attributes['ssl_verify'])) {
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $attributes['ssl_verify'] ? 2 : 0);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $attributes['ssl_verify'] ? true : false);
-	}
-	$html = curl_exec($ch);
-	$c_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	$c_error = curl_error($ch);
-	curl_close($ch);
-
-	if ($c_status != 200 || $c_error != '') {
-		Minz_Log::warning('Error fetching content: HTTP code ' . $c_status . ': ' . $c_error . ' ' . $url);
-	}
-
-	if ($html) {
-		$doc = phpQuery::newDocument($html);
-		$content = $doc->find($path);
-
-		foreach (pq('img[data-src]') as $img) {
-			$imgP = pq($img);
-			$dataSrc = $imgP->attr('data-src');
-			if (strlen($dataSrc) > 4) {
-				$imgP->attr('src', $dataSrc);
-				$imgP->removeAttr('data-src');
-			}
-		}
-
-		return sanitizeHTML($content->__toString(), $url);
-	} else {
-		throw new Exception();
-	}
 }
 
 /**
@@ -398,9 +371,9 @@ function get_user_configuration($username) {
 		                             join_path(FRESHRSS_PATH, 'config-user.default.php'));
 	} catch (Minz_ConfigurationNamespaceException $e) {
 		// namespace already exists, do nothing.
-		Minz_Log::warning($e->getMessage());
+		Minz_Log::warning($e->getMessage(), USERS_PATH . '/_/log.txt');
 	} catch (Minz_FileNotExistException $e) {
-		Minz_Log::warning($e->getMessage());
+		Minz_Log::warning($e->getMessage(), USERS_PATH . '/_/log.txt');
 		return null;
 	}
 
@@ -409,14 +382,13 @@ function get_user_configuration($username) {
 
 
 function httpAuthUser() {
-	if (isset($_SERVER['REMOTE_USER'])) {
+	if (!empty($_SERVER['REMOTE_USER'])) {
 		return $_SERVER['REMOTE_USER'];
-	}
-
-	if (isset($_SERVER['REDIRECT_REMOTE_USER'])) {
+	} elseif (!empty($_SERVER['REDIRECT_REMOTE_USER'])) {
 		return $_SERVER['REDIRECT_REMOTE_USER'];
+	} elseif (!empty($_SERVER['HTTP_X_WEBAUTH_USER'])) {
+		return $_SERVER['HTTP_X_WEBAUTH_USER'];
 	}
-
 	return '';
 }
 
@@ -467,6 +439,7 @@ function check_install_php() {
 		'fileinfo' => extension_loaded('fileinfo'),
 		'dom' => class_exists('DOMDocument'),
 		'json' => extension_loaded('json'),
+		'mbstring' => extension_loaded('mbstring'),
 		'zip' => extension_loaded('zip'),
 	);
 }
@@ -500,6 +473,9 @@ function check_install_database() {
 		'categories' => false,
 		'feeds' => false,
 		'entries' => false,
+		'entrytmp' => false,
+		'tag' => false,
+		'entrytag' => false,
 	);
 
 	try {
@@ -509,6 +485,9 @@ function check_install_database() {
 		$status['categories'] = $dbDAO->categoryIsCorrect();
 		$status['feeds'] = $dbDAO->feedIsCorrect();
 		$status['entries'] = $dbDAO->entryIsCorrect();
+		$status['entrytmp'] = $dbDAO->entrytmpIsCorrect();
+		$status['tag'] = $dbDAO->tagIsCorrect();
+		$status['entrytag'] = $dbDAO->entrytagIsCorrect();
 	} catch(Minz_PDOConnectionException $e) {
 		$status['connection'] = false;
 	}
@@ -542,7 +521,6 @@ function recursive_unlink($dir) {
 	return rmdir($dir);
 }
 
-
 /**
  * Remove queries where $get is appearing.
  * @param $get the get attribute which should be removed.
@@ -557,29 +535,6 @@ function remove_query_by_get($get, $queries) {
 		}
 	}
 	return $final_queries;
-}
-
-
-/**
- * Add a value in an array and take care it is unique.
- * @param $array the array in which we add the value.
- * @param $value the value to add.
- */
-function array_push_unique(&$array, $value) {
-	$found = array_search($value, $array) !== false;
-	if (!$found) {
-		$array[] = $value;
-	}
-}
-
-
-/**
- * Remove a value from an array.
- * @param $array the array from wich value is removed.
- * @param $value the value to remove.
- */
-function array_remove(&$array, $value) {
-	$array = array_diff($array, array($value));
 }
 
 //RFC 4648

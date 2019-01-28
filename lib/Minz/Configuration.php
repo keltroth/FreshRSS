@@ -27,23 +27,16 @@ class Minz_Configuration {
 	/**
 	 * Parse a file and return its data.
 	 *
-	 * If the file does not contain a valid PHP code returning an array, an
-	 * empty array is returned anyway.
-	 *
 	 * @param $filename the name of the file to parse.
 	 * @return an array of values
-	 * @throws Minz_FileNotExistException if the file does not exist.
+	 * @throws Minz_FileNotExistException if the file does not exist or is invalid.
 	 */
 	public static function load($filename) {
-		if (!file_exists($filename)) {
-			throw new Minz_FileNotExistException($filename);
-		}
-
-		$data = include($filename);
+		$data = @include($filename);
 		if (is_array($data)) {
 			return $data;
 		} else {
-			return array();
+			throw new Minz_FileNotExistException($filename);
 		}
 	}
 
@@ -90,15 +83,15 @@ class Minz_Configuration {
 	private $configuration_setter = null;
 
 	public function removeExtension($ext_name) {
-		self::$extensions_enabled = array_diff(
-			self::$extensions_enabled,
-			array($ext_name)
-		);
+		unset(self::$extensions_enabled[$ext_name]);
+		$legacyKey = array_search($ext_name, self::$extensions_enabled, true);
+		if ($legacyKey !== false) {	//Legacy format FreshRSS < 1.11.1
+			unset(self::$extensions_enabled[$legacyKey]);
+		}
 	}
 	public function addExtension($ext_name) {
-		$found = array_search($ext_name, self::$extensions_enabled) !== false;
-		if (!$found) {
-			self::$extensions_enabled[] = $ext_name;
+		if (!isset(self::$extensions_enabled[$ext_name])) {
+			self::$extensions_enabled[$ext_name] = true;
 		}
 	}
 
@@ -117,7 +110,7 @@ class Minz_Configuration {
 		$this->default_filename = $default_filename;
 		$this->_configurationSetter($configuration_setter);
 
-		if (!is_null($this->default_filename)) {
+		if ($this->default_filename != null) {
 			$this->data = self::load($this->default_filename);
 		}
 
@@ -126,7 +119,7 @@ class Minz_Configuration {
 				$this->data, self::load($this->config_filename)
 			);
 		} catch (Minz_FileNotExistException $e) {
-			if (is_null($this->default_filename)) {
+			if ($this->default_filename == null) {
 				throw $e;
 			}
 		}

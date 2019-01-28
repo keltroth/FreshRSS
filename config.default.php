@@ -12,7 +12,7 @@ return array(
 	'salt' => '',
 
 	# Specify address of the FreshRSS instance,
-	# used when building absolute URLs, e.g. for PubSubHubbub.
+	# used when building absolute URLs, e.g. for WebSub.
 	# Examples:
 	# https://example.net/FreshRSS/p/
 	# https://freshrss.example.net/
@@ -145,7 +145,9 @@ return array(
 	),
 
 	# List of enabled FreshRSS extensions.
-	'extensions_enabled' => array(),
+	'extensions_enabled' => array(
+		'Tumblr-GDPR' => true,
+	),
 
 	# Disable self-update,
 	'disable_update' => false,

@@ -79,7 +79,7 @@ if (!empty($_REQUEST['hub_mode']) && $_REQUEST['hub_mode'] === 'subscribe') {
 	}
 	$hubJson['lease_start'] = time();
 	if (!isset($hubJson['error'])) {
-		$hubJson['error'] = true;	//Do not assume that PubSubHubbub works until the first successul push
+		$hubJson['error'] = true;	//Do not assume that WebSub works until the first successul push
 	}
 	file_put_contents('./!hub.json', json_encode($hubJson));
 	header('Connection: close');
@@ -116,6 +116,8 @@ if ($self !== base64url_decode($canonical64)) {
 	$self = base64url_decode($canonical64);
 }
 
+Minz_ExtensionManager::init();
+
 $nb = 0;
 foreach ($users as $userFilename) {
 	$username = basename($userFilename, '.txt');
@@ -132,6 +134,10 @@ foreach ($users as $userFilename) {
 		                             join_path(FRESHRSS_PATH, 'config-user.default.php'));
 		new Minz_ModelPdo($username);	//TODO: FIXME: Quick-fix while waiting for a better FreshRSS() constructor/init
 		FreshRSS_Context::init();
+		if (FreshRSS_Context::$user_conf != null) {
+			Minz_ExtensionManager::enableByList(FreshRSS_Context::$user_conf->extensions_enabled);
+		}
+
 		list($updated_feeds, $feed, $nb_new_articles) = FreshRSS_feed_Controller::actualizeFeed(0, $self, false, $simplePie);
 		if ($updated_feeds > 0 || $feed != false) {
 			$nb++;
@@ -156,5 +162,5 @@ if ($nb === 0) {
 	file_put_contents('./!hub.json', json_encode($hubJson));
 }
 
-Minz_Log::notice('PubSubHubbub ' . $self . ' done: ' . $nb, PSHB_LOG);
+Minz_Log::notice('WebSub ' . $self . ' done: ' . $nb, PSHB_LOG);
 exit('Done: ' . $nb . "\n");
