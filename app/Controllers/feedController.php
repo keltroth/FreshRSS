@@ -45,11 +45,7 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 
 		$catDAO = new FreshRSS_CategoryDAO();
 
-<<<<<<< HEAD
 		$url = trim($param_url);
-=======
-		$url = trim($url);
->>>>>>> upstream/master
 
 		$cat = null;
 		if ($new_cat_name != '') {
