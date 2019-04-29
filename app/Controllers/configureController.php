@@ -55,6 +55,7 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 			FreshRSS_Context::$user_conf->bottomline_date = Minz_Request::param('bottomline_date', false);
 			FreshRSS_Context::$user_conf->bottomline_link = Minz_Request::param('bottomline_link', false);
 			FreshRSS_Context::$user_conf->html5_notif_timeout = Minz_Request::param('html5_notif_timeout', 0);
+			FreshRSS_Context::$user_conf->show_nav_buttons = Minz_Request::param('show_nav_buttons', false);
 			FreshRSS_Context::$user_conf->save();
 
 			Minz_Session::_param('language', FreshRSS_Context::$user_conf->language);
@@ -109,6 +110,7 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 			FreshRSS_Context::$user_conf->hide_read_feeds = Minz_Request::param('hide_read_feeds', false);
 			FreshRSS_Context::$user_conf->onread_jump_next = Minz_Request::param('onread_jump_next', false);
 			FreshRSS_Context::$user_conf->lazyload = Minz_Request::param('lazyload', false);
+			FreshRSS_Context::$user_conf->sides_close_article = Minz_Request::param('sides_close_article', false);
 			FreshRSS_Context::$user_conf->sticky_post = Minz_Request::param('sticky_post', false);
 			FreshRSS_Context::$user_conf->reading_confirm = Minz_Request::param('reading_confirm', false);
 			FreshRSS_Context::$user_conf->auto_remove_article = Minz_Request::param('auto_remove_article', false);
@@ -169,7 +171,7 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 		                   'm', 'n', 'o', 'p', 'page_down', 'page_up', 'q', 'r', 'return', 'right',
 		                   's', 'space', 't', 'tab', 'u', 'up', 'v', 'w', 'x', 'y',
 		                   'z', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9',
-		                   'f10', 'f11', 'f12');
+		                   'f10', 'f11', 'f12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0');
 		$this->view->list_keys = $list_keys;
 
 		if (Minz_Request::isPost()) {
@@ -203,16 +205,13 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 	 * The options available on that page are:
 	 *   - duration to retain old article (default: 3)
 	 *   - number of article to retain per feed (default: 0)
-	 *   - refresh frequency (default: -2)
-	 *
-	 * @todo explain why the default value is -2 but this value does not
-	 *       exist in the drop-down list
+	 *   - refresh frequency (default: 0)
 	 */
 	public function archivingAction() {
 		if (Minz_Request::isPost()) {
 			FreshRSS_Context::$user_conf->old_entries = Minz_Request::param('old_entries', 3);
 			FreshRSS_Context::$user_conf->keep_history_default = Minz_Request::param('keep_history_default', 0);
-			FreshRSS_Context::$user_conf->ttl_default = Minz_Request::param('ttl_default', -2);
+			FreshRSS_Context::$user_conf->ttl_default = Minz_Request::param('ttl_default', FreshRSS_Feed::TTL_DEFAULT);
 			FreshRSS_Context::$user_conf->save();
 			invalidateHttpCache();
 
@@ -224,10 +223,12 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 
 		$entryDAO = FreshRSS_Factory::createEntryDao();
 		$this->view->nb_total = $entryDAO->count();
-		$this->view->size_user = $entryDAO->size();
+
+		$databaseDAO = FreshRSS_Factory::createDatabaseDAO();
+		$this->view->size_user = $databaseDAO->size();
 
 		if (FreshRSS_Auth::hasAccess('admin')) {
-			$this->view->size_total = $entryDAO->size(true);
+			$this->view->size_total = $databaseDAO->size(true);
 		}
 	}
 
@@ -242,8 +243,9 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 	 * checking if categories and feeds are still in use.
 	 */
 	public function queriesAction() {
-		$category_dao = new FreshRSS_CategoryDAO();
+		$category_dao = FreshRSS_Factory::createCategoryDao();
 		$feed_dao = FreshRSS_Factory::createFeedDao();
+		$tag_dao = FreshRSS_Factory::createTagDao();
 		if (Minz_Request::isPost()) {
 			$params = Minz_Request::param('queries', array());
 
@@ -276,16 +278,17 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 	 * lean data.
 	 */
 	public function addQueryAction() {
-		$category_dao = new FreshRSS_CategoryDAO();
+		$category_dao = FreshRSS_Factory::createCategoryDao();
 		$feed_dao = FreshRSS_Factory::createFeedDao();
+		$tag_dao = FreshRSS_Factory::createTagDao();
 		$queries = array();
 		foreach (FreshRSS_Context::$user_conf->queries as $key => $query) {
-			$queries[$key] = new FreshRSS_UserQuery($query, $feed_dao, $category_dao);
+			$queries[$key] = new FreshRSS_UserQuery($query, $feed_dao, $category_dao, $tag_dao);
 		}
 		$params = Minz_Request::fetchGET();
 		$params['url'] = Minz_Url::display(array('params' => $params));
 		$params['name'] = _t('conf.query.number', count($queries) + 1);
-		$queries[] = new FreshRSS_UserQuery($params, $feed_dao, $category_dao);
+		$queries[] = new FreshRSS_UserQuery($params, $feed_dao, $category_dao, $tag_dao);
 
 		FreshRSS_Context::$user_conf->queries = $queries;
 		FreshRSS_Context::$user_conf->save();
@@ -305,6 +308,7 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 	 *   - user limit (default: 1)
 	 *   - user category limit (default: 16384)
 	 *   - user feed limit (default: 16384)
+	 *   - user login duration for form auth (default: 2592000)
 	 */
 	public function systemAction() {
 		if (!FreshRSS_Auth::hasAccess('admin')) {
@@ -315,6 +319,7 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 			$limits['max_registrations'] = Minz_Request::param('max-registrations', 1);
 			$limits['max_feeds'] = Minz_Request::param('max-feeds', 16384);
 			$limits['max_categories'] = Minz_Request::param('max-categories', 16384);
+			$limits['cookie_duration'] = Minz_Request::param('cookie-duration', 2592000);
 			FreshRSS_Context::$system_conf->limits = $limits;
 			FreshRSS_Context::$system_conf->title = Minz_Request::param('instance-name', 'FreshRSS');
 			FreshRSS_Context::$system_conf->auto_update_url = Minz_Request::param('auto-update-url', false);

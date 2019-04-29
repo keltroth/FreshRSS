@@ -1,16 +1,10 @@
 @charset "UTF-8";
 
-/*=== FONTS */
-@font-face {
-	font-family: "OpenSans";
-	src: url("../fonts/openSans.woff") format("woff");
-}
-
 /*=== GENERAL */
 /*============*/
 html, body {
 	height: 100%;
-	font-family: "OpenSans", "Cantarell", "Helvetica", "Arial", sans-serif;
+	font-family: "OpenSans", "Cantarell", "Helvetica", "Arial", "PingFang SC", "Microsoft YaHei", sans-serif;
 	background: #fafafa;
 }
 
@@ -154,6 +148,7 @@ form th {
 	display: inline-block;
 	min-height: 37px;
 	min-width: 15px;
+	line-height: 25px;
 	margin: 0;
 	padding: 5px 10px;
 	background: #fff;
@@ -358,16 +353,12 @@ a.btn {
 	font-weight: bold;
 	text-align: left;
 }
-.dropdown-menu > .item {
-}
-.dropdown-menu > .item > a {
-	padding: 0 25px;
-	line-height: 2.5em;
-}
+.dropdown-menu > .item > a,
 .dropdown-menu > .item > span,
 .dropdown-menu > .item > .as-link {
 	padding: 0 22px;
-	line-height: 2em;
+	line-height: 2.5em;
+	font-size: 0.8rem;
 }
 .dropdown-menu > .item:hover {
 	background: #0062BE;
@@ -853,7 +844,7 @@ a.btn {
 /*=== "Load more" part */
 #bigMarkAsRead {
 	text-align: center;
-	text-decoration: none;	
+	text-decoration: none;
 	text-shadow: 0 -1px 0 #aaa;
 	color: #666;
 	background: #fafafa;

@@ -10,17 +10,17 @@ return array(
 	),
 	'auth' => array(
 		'form' => array(
-			'not_set' => 'Een probleem is opgetreden tijdens de controle van de systeem configuratie. Probeer het later nog eens.',
+			'not_set' => 'Er is een probleem opgetreden tijdens de controle van de systeemconfiguratie. Probeer het later nog eens.',
 			'set' => 'Formulier is nu uw standaard authenticatie systeem.',
 		),
 		'login' => array(
-			'invalid' => 'Log in is ongeldig',
+			'invalid' => 'Login is ongeldig',
 			'success' => 'U bent ingelogd',
 		),
 		'logout' => array(
 			'success' => 'U bent uitgelogd',
 		),
-		'no_password_set' => 'Administrateur wachtwoord is niet ingesteld. Deze mogelijkheid is niet beschikbaar.',
+		'no_password_set' => 'Beheerderswachtwoord is niet ingesteld. Deze mogelijkheid is niet beschikbaar.',
 	),
 	'conf' => array(
 		'error' => 'Er is een fout opgetreden tijdens het opslaan van de configuratie',
@@ -31,11 +31,11 @@ return array(
 	'extensions' => array(
 		'already_enabled' => '%s is al ingeschakeld',
 		'disable' => array(
-			'ko' => '%s kan niet worden uitgeschakeld. <a href="%s">Controleer FressRSS log bestanden</a> voor details.',
+			'ko' => '%s kan niet worden uitgeschakeld. <a href="%s">Controleer FreshRSS log bestanden</a> voor details.',
 			'ok' => '%s is nu uitgeschakeld',
 		),
 		'enable' => array(
-			'ko' => '%s kan niet worden ingeschakeld. <a href="%s">Controleer FressRSS log bestanden</a> voor details.',
+			'ko' => '%s kan niet worden ingeschakeld. <a href="%s">Controleer FreshRSS log bestanden</a> voor details.',
 			'ok' => '%s is nn ingeschakeld',
 		),
 		'no_access' => 'U hebt geen toegang voor %s',
@@ -50,8 +50,16 @@ return array(
 		'no_zip_extension' => 'ZIP uitbreiding is niet aanwezig op uw server.',
 		'zip_error' => 'Er is een fout opgetreden tijdens het imporeren van het ZIP bestand.',
 	),
+	'profile' => array(
+		'error' => 'Uw profiel kan niet worden aangepast',
+		'updated' => 'Uw profiel is aangepast',
+	),
 	'sub' => array(
 		'actualize' => 'Actualiseren',
+		'articles' => array(
+			'marked_read' => 'De geselecteerde artikelen zijn als gelezen gemarkeerd.',
+			'marked_unread' => 'De geselecteerde artikelen zijn als ongelezen gemarkeerd.',
+		),
 		'category' => array(
 			'created' => 'Categorie %s is gemaakt.',
 			'deleted' => 'Categorie is verwijderd.',
@@ -72,9 +80,8 @@ return array(
 			'already_subscribed' => 'U bent al geabonneerd op <em>%s</em>',
 			'deleted' => 'Feed is verwijderd',
 			'error' => 'Feed kan niet worden vernieuwd',
-			'internal_problem' => 'De RSS feed kon niet worden toegevoegd. <a href="%s">Controleer FressRSS log bestanden</a> voor details.',
+			'internal_problem' => 'De feed kon niet worden toegevoegd. <a href="%s">Controleer de FreshRSS-logbestanden</a> voor details. Toevoegen forceren kan worden geprobeerd door <code>#force_feed</code> aan de URL toe te voegen.',
 			'invalid_url' => 'URL <em>%s</em> is ongeldig',
-			'marked_read' => 'Feeds zijn gemarkeerd als gelezen',
 			'n_actualized' => '%d feeds zijn vernieuwd',
 			'n_entries_deleted' => '%d artikelen zijn verwijderd',
 			'no_refresh' => 'Er is geen feed om te vernieuwen…',
@@ -87,7 +94,7 @@ return array(
 	'update' => array(
 		'can_apply' => 'FreshRSS word nu vernieud naar <strong>versie %s</strong>.',
 		'error' => 'Het vernieuwingsproces kwam een fout tegen: %s',
-		'file_is_nok' => 'Controleer permissies op <em>%s</em> map. HTTP server moet rechten hebben om er in te schrijven',
+		'file_is_nok' => '<strong>Versie %s</strong>. Controleer permissies op <em>%s</em> map. HTTP server moet rechten hebben om er in te schrijven',
 		'finished' => 'Vernieuwing compleet!',
 		'none' => 'Geen vernieuwing om toe te passen',
 		'server_not_found' => 'Vernieuwings server kan niet worden gevonden. [%s]',
@@ -101,10 +108,9 @@ return array(
 			'_' => 'Gebruiker %s is verwijderd',
 			'error' => 'Gebruiker %s kan niet worden verwijderd',
 		),
-		'set_registration' => 'Het maximale aantal accounts is vernieuwd.',
-	),
-	'profile' => array(
-		'error' => 'Uw profiel kan niet worden aangepast',
-		'updated' => 'Uw profiel is aangepast',
+		'updated' => array(
+			'_' => 'Gebruiker %s is bijgewerkt',
+			'error' => 'Gebruiker %s kan niet worden bijgewerkt',
+		),
 	),
 );

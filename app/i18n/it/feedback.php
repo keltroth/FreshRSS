@@ -50,8 +50,16 @@ return array(
 		'no_zip_extension' => 'Estensione ZIP non presente sul server.',
 		'zip_error' => 'Si è verificato un errore importando il file ZIP',
 	),
+	'profile' => array(
+		'error' => 'Il tuo profilo non può essere modificato',
+		'updated' => 'Il tuo profilo è stato modificato',
+	),
 	'sub' => array(
 		'actualize' => 'Aggiorna',
+		'articles' => array(
+			'marked_read' => 'The selected articles have been marked as read.',	//TODO - Translation
+			'marked_unread' => 'The articles have been marked as unread.',	//TODO - Translation
+		),
 		'category' => array(
 			'created' => 'Categoria %s creata.',
 			'deleted' => 'Categoria cancellata',
@@ -72,9 +80,8 @@ return array(
 			'already_subscribed' => 'Hai già sottoscritto <em>%s</em>',
 			'deleted' => 'Feed cancellato',
 			'error' => 'Feed non aggiornato',
-			'internal_problem' => 'RSS feed non aggiunto. <a href="%s">Verifica i logs</a> per dettagli.',
+			'internal_problem' => 'RSS feed non aggiunto. <a href="%s">Verifica i logs</a> per dettagli.',	//TODO - Translation
 			'invalid_url' => 'URL <em>%s</em> non valido',
-			'marked_read' => 'Feeds segnati come letti',
 			'n_actualized' => '%d feeds aggiornati',
 			'n_entries_deleted' => '%d articoli cancellati',
 			'no_refresh' => 'Nessun aggiornamento disponibile…',
@@ -87,7 +94,7 @@ return array(
 	'update' => array(
 		'can_apply' => 'FreshRSS verrà aggiornato alla <strong>versione %s</strong>.',
 		'error' => 'Il processo di aggiornamento ha riscontrato il seguente errore: %s',
-		'file_is_nok' => 'Verifica i permessi della cartella <em>%s</em>. Il server HTTP deve avere i permessi per la scrittura ',
+		'file_is_nok' => 'Nuova <strong>versione %s</strong>, ma verifica i permessi della cartella <em>%s</em>. Il server HTTP deve avere i permessi per la scrittura ',
 		'finished' => 'Aggiornamento completato con successo!',
 		'none' => 'Nessun aggiornamento disponibile',
 		'server_not_found' => 'Server per aggiornamento non disponibile. [%s]',
@@ -101,9 +108,9 @@ return array(
 			'_' => 'Utente %s cancellato',
 			'error' => 'Utente %s non cancellato',
 		),
-	),
-	'profile' => array(
-		'error' => 'Il tuo profilo non può essere modificato',
-		'updated' => 'Il tuo profilo è stato modificato',
+		'updated' => array(
+			'_' => 'User %s has been updated',	//TODO - Translation
+			'error' => 'User %s has not been updated',	//TODO - Translation
+		),
 	),
 );

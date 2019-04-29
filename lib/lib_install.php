@@ -2,23 +2,46 @@
 
 define('BCRYPT_COST', 9);
 
-Minz_Configuration::register('default_system', join_path(DATA_PATH, 'config.default.php'));
-Minz_Configuration::register('default_user', join_path(USERS_PATH, '_', 'config.default.php'));
+Minz_Configuration::register('default_system', join_path(FRESHRSS_PATH, 'config.default.php'));
+Minz_Configuration::register('default_user', join_path(FRESHRSS_PATH, 'config-user.default.php'));
 
-function checkRequirements() {
-	$php = version_compare(PHP_VERSION, '5.3.3') >= 0;
+function checkRequirements($dbType = '') {
+	$php = version_compare(PHP_VERSION, '5.3.8') >= 0;
 	$minz = file_exists(join_path(LIB_PATH, 'Minz'));
 	$curl = extension_loaded('curl');
 	$pdo_mysql = extension_loaded('pdo_mysql');
 	$pdo_sqlite = extension_loaded('pdo_sqlite');
 	$pdo_pgsql = extension_loaded('pdo_pgsql');
-	$pdo = $pdo_mysql || $pdo_sqlite || $pdo_pgsql;
+	$message = '';
+	switch ($dbType) {
+		case 'mysql':
+			$pdo_sqlite = $pdo_pgsql = true;
+			$pdo = $pdo_mysql;
+			break;
+		case 'sqlite':
+			$pdo_mysql = $pdo_pgsql = true;
+			$pdo = $pdo_sqlite;
+			break;
+		case 'pgsql':
+			$pdo_mysql = $pdo_sqlite = true;
+			$pdo = $pdo_pgsql;
+			break;
+		case '':
+			$pdo = $pdo_mysql || $pdo_sqlite || $pdo_pgsql;
+			break;
+		default:
+			$pdo_mysql = $pdo_sqlite = $pdo_pgsql = true;
+			$pdo = false;
+			$message = 'Invalid database type!';
+			break;
+	}
 	$pcre = extension_loaded('pcre');
 	$ctype = extension_loaded('ctype');
 	$fileinfo = extension_loaded('fileinfo');
 	$dom = class_exists('DOMDocument');
 	$xml = function_exists('xml_parser_create');
 	$json = function_exists('json_encode');
+	$mbstring = extension_loaded('mbstring');
 	$data = DATA_PATH && is_writable(DATA_PATH);
 	$cache = CACHE_PATH && is_writable(CACHE_PATH);
 	$users = USERS_PATH && is_writable(USERS_PATH);
@@ -39,14 +62,15 @@ function checkRequirements() {
 		'dom' => $dom ? 'ok' : 'ko',
 		'xml' => $xml ? 'ok' : 'ko',
 		'json' => $json ? 'ok' : 'ko',
+		'mbstring' => $mbstring ? 'ok' : 'ko',
 		'data' => $data ? 'ok' : 'ko',
 		'cache' => $cache ? 'ok' : 'ko',
 		'users' => $users ? 'ok' : 'ko',
 		'favicons' => $favicons ? 'ok' : 'ko',
 		'http_referer' => $http_referer ? 'ok' : 'ko',
-		'all' => $php && $minz && $curl && $pdo && $pcre && $ctype && $fileinfo && $dom && $xml &&
-		         $data && $cache && $users && $favicons && $http_referer ?
-		         'ok' : 'ko'
+		'message' => $message ?: 'ok',
+		'all' => $php && $minz && $curl && $pdo && $pcre && $ctype && $dom && $xml &&
+		         $data && $cache && $users && $favicons && $http_referer && $message == '' ? 'ok' : 'ko'
 	);
 }
 
@@ -57,6 +81,7 @@ function generateSalt() {
 function checkDb(&$dbOptions) {
 	$dsn = '';
 	$driver_options = null;
+	prepareSyslog();
 	try {
 		switch ($dbOptions['type']) {
 		case 'mysql':
@@ -77,7 +102,11 @@ function checkDb(&$dbOptions) {
 			break;
 		case 'sqlite':
 			include_once(APP_PATH . '/SQL/install.sql.sqlite.php');
-			$dsn = 'sqlite:' . join_path(USERS_PATH, $dbOptions['default_user'], 'db.sqlite');
+			$path = join_path(USERS_PATH, $dbOptions['default_user']);
+			if (!is_dir($path)) {
+				mkdir($path);
+			}
+			$dsn = 'sqlite:' . join_path($path, 'db.sqlite');
 			$driver_options = array(
 				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 			);

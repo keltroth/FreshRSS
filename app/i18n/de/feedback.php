@@ -31,11 +31,11 @@ return array(
 	'extensions' => array(
 		'already_enabled' => '%s ist bereits aktiviert',
 		'disable' => array(
-			'ko' => '%s kann nicht deaktiviert werden. Für Details <a href="%s">prüfen Sie die FressRSS-Protokolle</a>.',
+			'ko' => '%s kann nicht deaktiviert werden. Für Details <a href="%s">prüfen Sie die FreshRSS-Protokolle</a>.',
 			'ok' => '%s ist jetzt deaktiviert',
 		),
 		'enable' => array(
-			'ko' => '%s kann nicht aktiviert werden. Für Details <a href="%s">prüfen Sie die FressRSS-Protokolle</a>.',
+			'ko' => '%s kann nicht aktiviert werden. Für Details <a href="%s">prüfen Sie die FreshRSS-Protokolle</a>.',
 			'ok' => '%s ist jetzt aktiviert',
 		),
 		'no_access' => 'Sie haben keinen Zugang zu %s',
@@ -50,8 +50,16 @@ return array(
 		'no_zip_extension' => 'Die ZIP-Erweiterung ist auf Ihrem Server nicht vorhanden.',
 		'zip_error' => 'Ein Fehler trat während des ZIP-Imports auf.',
 	),
+	'profile' => array(
+		'error' => 'Ihr Profil kann nicht geändert werden',
+		'updated' => 'Ihr Profil ist geändert worden',
+	),
 	'sub' => array(
 		'actualize' => 'Aktualisieren',
+		'articles' => array(
+			'marked_read' => 'Die ausgewählten Artikel wurden als gelesen markiert.',
+			'marked_unread' => 'Die ausgewählten Artikel wurden als ungelesen markiert.',
+		),
 		'category' => array(
 			'created' => 'Die Kategorie %s ist erstellt worden.',
 			'deleted' => 'Die Kategorie ist gelöscht worden.',
@@ -72,9 +80,8 @@ return array(
 			'already_subscribed' => 'Sie haben <em>%s</em> bereits abonniert',
 			'deleted' => 'Der Feed ist gelöscht worden',
 			'error' => 'Der Feed kann nicht aktualisiert werden',
-			'internal_problem' => 'Der RSS-Feed konnte nicht hinzugefügt werden. Für Details <a href="%s">prüfen Sie die FressRSS-Protokolle</a>.',
+			'internal_problem' => 'Der RSS-Feed konnte nicht hinzugefügt werden. Für Details <a href="%s">prüfen Sie die FreshRSS-Protokolle</a>.',
 			'invalid_url' => 'Die URL <em>%s</em> ist ungültig',
-			'marked_read' => 'Die Feeds sind als gelesen markiert worden',
 			'n_actualized' => 'Die %d Feeds sind aktualisiert worden',
 			'n_entries_deleted' => 'Die %d Artikel sind gelöscht worden',
 			'no_refresh' => 'Es gibt keinen Feed zum Aktualisieren…',
@@ -87,7 +94,7 @@ return array(
 	'update' => array(
 		'can_apply' => 'FreshRSS wird nun auf die <strong>Version %s</strong> aktualisiert.',
 		'error' => 'Der Aktualisierungsvorgang stieß auf einen Fehler: %s',
-		'file_is_nok' => 'Überprüfen Sie die Berechtigungen des Verzeichnisses <em>%s</em>. Der HTTP-Server muss Schreibrechte besitzen',
+		'file_is_nok' => '<strong>Version %s</strong>. Überprüfen Sie die Berechtigungen des Verzeichnisses <em>%s</em>. Der HTTP-Server muss Schreibrechte besitzen',
 		'finished' => 'Aktualisierung abgeschlossen!',
 		'none' => 'Keine Aktualisierung zum Anwenden',
 		'server_not_found' => 'Der Aktualisierungs-Server kann nicht gefunden werden. [%s]',
@@ -101,9 +108,9 @@ return array(
 			'_' => 'Der Benutzer %s ist gelöscht worden',
 			'error' => 'Der Benutzer %s kann nicht gelöscht werden',
 		),
-	),
-	'profile' => array(
-		'error' => 'Ihr Profil kann nicht geändert werden',
-		'updated' => 'Ihr Profil ist geändert worden',
+		'updated' => array(
+			'_' => 'Benutzer %s wurde aktualisiert',
+			'error' => 'Benutzer %s wurde nicht aktualisiert',
+		),
 	),
 );

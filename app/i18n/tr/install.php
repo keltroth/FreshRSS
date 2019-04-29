@@ -24,8 +24,8 @@ return array(
 			'ok' => 'Veritabanı yapılandırılması kayıt edildi.',
 		),
 		'host' => 'Sunucu',
-		'prefix' => 'Tablo ön eki',
 		'password' => 'Veritabanı şifresi',
+		'prefix' => 'Tablo ön eki',
 		'type' => 'Veritabanı türü',
 		'username' => 'Veritabanı kullanıcı adı',
 	),
@@ -68,6 +68,10 @@ return array(
 			'nok' => 'Tavsiye edilen JSON çözümleme kütüphanesi eksik.',
 			'ok' => 'Tavsiye edilen JSON çözümleme kütüphanesi sorunsuz.',
 		),
+		'mbstring' => array(
+			'nok' => 'Cannot find the recommended library mbstring for Unicode.',	//TODO - Translation
+			'ok' => 'You have the recommended library mbstring for Unicode.',	//TODO - Translation
+		),
 		'minz' => array(
 			'nok' => 'Minz framework eksik.',
 			'ok' => 'Minz framework sorunsuz.',
@@ -103,7 +107,7 @@ return array(
 	'fix_errors_before' => 'Lütfen sonraki adıma geçmek için hataları düzeltin.',
 	'javascript_is_better' => 'FreshRSS JavaScript ile daha işlevseldir',
 	'js' => array(
-		'confirm_reinstall' => 'FressRSS i yeniden kurarak önceki yapılandırma ayarlarınızı kaybedeceksiniz. Devam etmek istiyor musunuz ?',
+		'confirm_reinstall' => 'FreshRSS i yeniden kurarak önceki yapılandırma ayarlarınızı kaybedeceksiniz. Devam etmek istiyor musunuz ?',
 	),
 	'language' => array(
 		'_' => 'Dil',

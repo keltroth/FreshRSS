@@ -1,3 +1,21 @@
 FreshRSS.log
 data/persona
 data/users/log.txt
+constants.local.php
+
+# Temp files
+*~
+*.bak
+*.backup
+\#*
+.\#*
+*\#
+*.swp
+*.swap
+*.sav
+*.save
+*.autosav
+*.autosave
+*.log
+*.sass-cache
+sass.sh

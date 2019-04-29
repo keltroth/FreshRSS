@@ -31,11 +31,11 @@ return array(
 	'extensions' => array(
 		'already_enabled' => '%s je již zapnut',
 		'disable' => array(
-			'ko' => '%s nelze vypnout. Pro více detailů <a href="%s">zkontrolujte logy FressRSS</a>.',
+			'ko' => '%s nelze vypnout. Pro více detailů <a href="%s">zkontrolujte logy FreshRSS</a>.',
 			'ok' => '%s je nyní vypnut',
 		),
 		'enable' => array(
-			'ko' => '%s nelze zapnout. Pro více detailů <a href="%s">zkontrolujte logy FressRSS</a>.',
+			'ko' => '%s nelze zapnout. Pro více detailů <a href="%s">zkontrolujte logy FreshRSS</a>.',
 			'ok' => '%s je nyní zapnut',
 		),
 		'no_access' => 'Nemáte přístup k %s',
@@ -50,8 +50,16 @@ return array(
 		'no_zip_extension' => 'Na serveru není naistalována podpora ZIP.',
 		'zip_error' => 'Během importu ZIP souboru došlo k chybě.',
 	),
+	'profile' => array(
+		'error' => 'Váš profil nelze změnit',
+		'updated' => 'Váš profil byl změněn',
+	),
 	'sub' => array(
 		'actualize' => 'Aktualizovat',
+		'articles' => array(
+			'marked_read' => 'The selected articles have been marked as read.',	//TODO - Translation
+			'marked_unread' => 'The articles have been marked as unread.',	//TODO - Translation
+		),
 		'category' => array(
 			'created' => 'Kategorie %s byla vytvořena.',
 			'deleted' => 'Kategorie byla smazána.',
@@ -72,9 +80,8 @@ return array(
 			'already_subscribed' => 'Již jste přihlášen k odběru <em>%s</em>',
 			'deleted' => 'Kanál byl smazán',
 			'error' => 'Kanál nelze aktualizovat',
-			'internal_problem' => 'RSS kanál nelze přidat. Pro detaily <a href="%s">zkontrolujte logy FressRSS</a>.',
+			'internal_problem' => 'RSS kanál nelze přidat. Pro detaily <a href="%s">zkontrolujte logy FreshRSS</a>.',	//TODO - Translation
 			'invalid_url' => 'URL <em>%s</em> není platné',
-			'marked_read' => 'Kanály byly označeny jako přečtené',
 			'n_actualized' => '%d kanálů bylo aktualizováno',
 			'n_entries_deleted' => '%d článků bylo smazáno',
 			'no_refresh' => 'Nelze obnovit žádné kanály…',
@@ -87,7 +94,7 @@ return array(
 	'update' => array(
 		'can_apply' => 'FreshRSS bude nyní upgradováno na <strong>verzi %s</strong>.',
 		'error' => 'Během upgrade došlo k chybě: %s',
-		'file_is_nok' => 'Zkontrolujte oprávnění adresáře <em>%s</em>. HTTP server musí mít do tohoto adresáře práva zápisu',
+		'file_is_nok' => '<strong>Verzi %s</strong>. Zkontrolujte oprávnění adresáře <em>%s</em>. HTTP server musí mít do tohoto adresáře práva zápisu',
 		'finished' => 'Upgrade hotov!',
 		'none' => 'Novější verze není k dispozici',
 		'server_not_found' => 'Nelze nalézt server s instalačním souborem. [%s]',
@@ -101,9 +108,9 @@ return array(
 			'_' => 'Uživatel %s byl smazán',
 			'error' => 'Uživatele %s nelze smazat',
 		),
-	),
-	'profile' => array(
-		'error' => 'Váš profil nelze změnit',
-		'updated' => 'Váš profil byl změněn',
+		'updated' => array(
+			'_' => 'User %s has been updated',	//TODO - Translation
+			'error' => 'User %s has not been updated',	//TODO - Translation
+		),
 	),
 );

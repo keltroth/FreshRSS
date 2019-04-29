@@ -1,16 +1,10 @@
 @charset "UTF-8";
 
-/*=== FONTS */
-@font-face {
-	font-family: "OpenSans";
-	src: url("../fonts/openSans.woff") format("woff");
-}
-
 /*=== GENERAL */
 /*============*/
 html, body {
 	height: 100%;
-	font-family: "OpenSans", "Cantarell", "Helvetica", "Arial", sans-serif;
+	font-family: "OpenSans", "Cantarell", "Helvetica", "Arial", "PingFang SC", "Microsoft YaHei", sans-serif;
 	background: #fafafa;
 	font-size: 92%;
 }
@@ -121,6 +115,9 @@ form th {
 }
 
 /*=== Buttons */
+button.as-link[disabled] {
+	color:#555 !important;
+}
 
 .dropdown-menu .input select, .dropdown-menu .input input {
     background:#444;
@@ -368,17 +365,15 @@ a.btn {
 .dropdown-header {
 	display:none;
 }
-.dropdown-menu > .item {
-}
-.dropdown-menu > .item > a {
-	padding: 0 25px;
-	line-height: 2.5em;
-	color: #ccc;
-}
+.dropdown-menu > .item > a,
 .dropdown-menu > .item > span,
 .dropdown-menu > .item > .as-link {
 	padding: 0 22px;
-	line-height: 2em;
+	line-height: 2.5em;
+	color: #ccc;
+	font-size: 0.8rem;
+}
+.dropdown-menu > .item > label {
 	color: #ccc;
 }
 .dropdown-menu > .item:hover {
@@ -562,6 +557,24 @@ a.btn {
 	font-size: 0.92em;
 }
 .tree-folder-items > .item.active > a {
+}
+
+/*=== Scrollbar */
+@supports (scrollbar-width: thin) {
+	#sidebar {
+		scrollbar-color: rgba(255, 255, 255, 0.05) rgba(0, 0, 0, 0.0);
+	}
+	#sidebar:hover {
+		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.0);
+	}
+}
+@supports not (scrollbar-width: thin) {
+	#sidebar::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.1);
+	}
+	#sidebar:hover::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.3);
+	}
 }
 
 /*=== STRUCTURE */

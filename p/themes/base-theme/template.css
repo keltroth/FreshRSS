@@ -2,9 +2,19 @@
 
 /*=== GENERAL */
 /*============*/
+@font-face {
+	font-family: 'OpenSans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Open Sans'), local('OpenSans'),
+		url('../fonts/OpenSans.woff2') format('woff2'),
+		url('../fonts/OpenSans.woff') format('woff');
+}
+
 html, body {
 	margin: 0;
 	padding: 0;
+	font-family: "OpenSans", "Cantarell", "Helvetica", "Arial", sans-serif;
 	font-size: 100%;
 }
 
@@ -61,6 +71,9 @@ img.favicon {
 	width: 16px;
 	vertical-align: middle;
 }
+.feed.mute::before {
+	content: '🔇';
+}
 
 /*=== Videos */
 iframe, embed, object, video {
@@ -88,11 +101,20 @@ input.extend:focus {
 input, select, textarea {
 	display: inline-block;
 	max-width: 100%;
+	font-size: 0.8rem;
 }
 input[type="radio"],
 input[type="checkbox"] {
 	width: 15px !important;
 	min-height: 15px !important;
+}
+.dropdown-menu label > input[type="text"] {
+	width: 150px;
+	width: calc(99% - 5em);
+}
+.dropdown-menu input[type="checkbox"] {
+	margin-left: 1em;
+	margin-right: .5em;
 }
 button.as-link,
 button.as-link:hover,
@@ -103,6 +125,9 @@ button.as-link:active {
 	cursor: pointer;
 	font-size: 1.1em;
 	text-align: left;
+}
+button.as-link[disabled] {
+	color:#DDD !important;
 }
 
 /*=== Tables */
@@ -118,7 +143,7 @@ td.numeric {
 /*===============*/
 
 [aria-hidden="true"] {
-	display: none;
+	display: none !important;
 }
 
 /*=== Forms */
@@ -141,6 +166,13 @@ td.numeric {
 }
 .form-group .group-controls .control {
 	display: block;
+}
+
+@supports (position: sticky) {
+	#mark-read-aside {
+		position: sticky;
+		top: 0;
+	}
 }
 
 /*=== Buttons */
@@ -205,6 +237,11 @@ a.btn {
 	background: #fff;
 	border: 1px solid #aaa;
 }
+.dropdown-menu-scrollable {
+	max-height: 75vh;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
 .dropdown-header {
 	display: block;
 }
@@ -216,6 +253,7 @@ a.btn {
 .dropdown-menu > .item > span {
 	display: block;
 	min-width: 200px;
+	white-space: nowrap;
 }
 .dropdown-menu > .item[aria-checked="true"] > a::before {
 	content: '✓';
@@ -230,7 +268,7 @@ a.btn {
 }
 .dropdown-target:target ~ .dropdown-menu {
 	display: block;
-	z-index: 10;
+	z-index: 1000;
 }
 .dropdown-close {
 	display: inline;
@@ -242,6 +280,7 @@ a.btn {
 	left: 0; right: 0;
 	display: block;
 	z-index: -10;
+	cursor: default;
 }
 .separator {
 	display: block;
@@ -342,16 +381,47 @@ a.btn {
 	cursor: grab;
 }
 
+/*=== Scrollbar */
+@supports (scrollbar-width: thin) {
+	#sidebar {
+		overflow-y: auto;
+		scrollbar-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.05);
+		scrollbar-width: thin;
+	}
+	#sidebar:hover {
+		scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.05);
+	}
+}
+
+@supports not (scrollbar-width: thin) {
+	#sidebar::-webkit-scrollbar {
+		background: rgba(0, 0, 0, 0.05);
+		width: 8px;
+	}
+	#sidebar::-webkit-scrollbar-thumb {
+		background: rgba(0, 0, 0, 0.1);
+		border-radius: 5px;
+		display: unset;
+	}
+	#sidebar:hover::-webkit-scrollbar-thumb {
+		background: rgba(0, 0, 0, 0.3);
+	}
+}
+
 /*=== Tree */
 .tree {
 	margin: 0;
-	padding: 0;
+	max-height: 99vh;
 	list-style: none;
 	text-align: left;
+	overflow-x: hidden;
 }
+
 .tree-folder-items {
-	padding: 0;
 	list-style: none;
+	max-height: 200em;
+	padding: 0;
+	transition: max-height .3s linear;
 }
 .tree-folder-title {
 	display: block;
@@ -375,6 +445,10 @@ a.btn {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+.tree-bottom {
+	visibility: hidden;
+	margin-bottom: 18em;
 }
 
 /*=== STRUCTURE */
@@ -414,7 +488,6 @@ a.btn {
 }
 .aside {
 	display: table-cell;
-	height: 100%;
 	width: 300px;
 	vertical-align: top;
 }
@@ -431,7 +504,11 @@ a.btn {
 	padding: 0px 15px;
 }
 .aside_feed .tree-folder-items:not(.active) {
-	display: none;
+	border: none;
+	margin: 0;
+	max-height: 0;
+	padding: 0;
+	overflow: hidden;
 }
 .aside_feed .tree-folder-items .dropdown {
 	vertical-align: top;
@@ -561,9 +638,13 @@ br + br + br {
 	z-index: 10;
 	background: #fff;
 	border: 1px solid #aaa;
+	opacity: 1;
+	visibility: visible;
+	transition: visibility 0s, opacity .3s linear;
 }
 .notification.closed {
-	display: none;
+	opacity: 0;
+	visibility: hidden;
 }
 .notification a.close {
 	position: absolute;
@@ -611,7 +692,8 @@ br + br + br {
 #bigMarkAsRead {
 	display: block;
 	width: 100%;
-	padding: 1em 0;
+	padding: 1em 0 100% 0;
+	padding: 1em 0 100vh 0;
 	text-align: center;
 	font-size: 1.4em;
 }
@@ -635,6 +717,21 @@ br + br + br {
 	height: 300px;
 }
 
+/*=== LOGIN VIEW */
+/*================*/
+.formLogin .header > .item {
+	padding: 10px 30px;
+}
+
+.formLogin .header > .item.title {
+	text-align: left;
+}
+
+.formLogin .header > .item.configure {
+	text-align: right;
+}
+
+
 /*=== GLOBAL VIEW */
 /*================*/
 #stream.global {
@@ -644,14 +741,29 @@ br + br + br {
 #stream.global .box {
 	text-align: left;
 }
-
+#global > #panel {
+	bottom: 99vh;
+	display: block;
+	transition: visibility .3s, bottom .3s;
+	visibility: hidden;
+}
+#global > #panel.visible {
+	bottom: 1em;
+	visibility: visible;
+}
 /*=== Panel */
 #overlay {
-	display: none;
 	position: fixed;
 	top: 0; bottom: 0;
 	left: 0; right: 0;
 	background: rgba(0, 0, 0, 0.9);
+	opacity: 0;
+	transition: visibility .3s, opacity .3s;
+	visibility: hidden;
+}
+#overlay.visible {
+	opacity: 1;
+	visibility: visible;
 }
 #panel {
 	display: none;
@@ -813,9 +925,36 @@ input:checked + .slide-container .properties {
 	display: none;
 }
 
-.enclosure > [download] {
+.enclosure [download] {
 	font-size: xx-large;
 	margin-left: .8em;
+}
+
+pre.enclosure-description {
+	white-space: pre-line;
+}
+
+/*=== READER */
+/*===========*/
+.reader .nav_menu .toggle_aside {
+	display: inline-block;
+}
+
+.reader .aside .toggle_aside {
+	display: block;
+	width: 100%;
+}
+
+.reader .aside {
+	width: 0;
+}
+
+.reader .aside:target {
+	width: 300px;
+}
+
+.reader .aside .stick {
+	display: none;
 }
 
 /*=== MOBILE */
@@ -827,6 +966,15 @@ input:checked + .slide-container .properties {
 	.item.date, .day .date,
 	.dropdown-menu > .no-mobile,
 	.no-mobile {
+		display: none;
+	}
+	.dropdown .dropdown-menu {
+		border-radius: 0;
+		bottom: 0;
+		position: fixed;
+		width: 100%;
+	}
+	.dropdown-menu::after {
 		display: none;
 	}
 	.aside .toggle_aside,
@@ -849,7 +997,6 @@ input:checked + .slide-container .properties {
 	}
 	.aside:target {
 		width: 90%;
-		overflow: auto;
 	}
 
 	.flux_header .item.website {

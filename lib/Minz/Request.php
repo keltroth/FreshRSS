@@ -39,6 +39,19 @@ class Minz_Request {
 			return $default;
 		}
 	}
+	public static function paramTernary($key) {
+		if (isset(self::$params[$key])) {
+			$p = self::$params[$key];
+			$tp = trim($p);
+			if ($p === null || $tp === '' || $tp === 'null') {
+				return null;
+			} elseif ($p == false || $tp == '0' || $tp === 'false' || $tp === 'no') {
+				return false;
+			}
+			return true;
+		}
+		return null;
+	}
 	public static function defaultControllerName() {
 		return self::$default_controller_name;
 	}
@@ -82,6 +95,7 @@ class Minz_Request {
 	 */
 	public static function init() {
 		self::magicQuotesOff();
+		self::initJSON();
 	}
 
 	/**
@@ -105,8 +119,11 @@ class Minz_Request {
 
 		$https = self::isHttps();
 
-		if (!empty($_SERVER['HTTP_HOST'])) {
-			$host = $_SERVER['HTTP_HOST'];
+		if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+			$host = parse_url('http://' . $_SERVER['HTTP_X_FORWARDED_HOST'], PHP_URL_HOST);
+		} elseif (!empty($_SERVER['HTTP_HOST'])) {
+			//Might contain a port number, and mind IPv6 addresses
+			$host = parse_url('http://' . $_SERVER['HTTP_HOST'], PHP_URL_HOST);
 		} elseif (!empty($_SERVER['SERVER_NAME'])) {
 			$host = $_SERVER['SERVER_NAME'];
 		} else {
@@ -115,6 +132,8 @@ class Minz_Request {
 
 		if (!empty($_SERVER['HTTP_X_FORWARDED_PORT'])) {
 			$port = intval($_SERVER['HTTP_X_FORWARDED_PORT']);
+		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+			$port = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https' ? 443 : 80;
 		} elseif (!empty($_SERVER['SERVER_PORT'])) {
 			$port = intval($_SERVER['SERVER_PORT']);
 		} else {
@@ -125,6 +144,9 @@ class Minz_Request {
 			$url .= 's://' . $host . ($port == 443 ? '' : ':' . $port);
 		} else {
 			$url .= '://' . $host . ($port == 80 ? '' : ':' . $port);
+		}
+		if (!empty($_SERVER['HTTP_X_FORWARDED_PREFIX'])) {
+			$url .= rtrim($_SERVER['HTTP_X_FORWARDED_PREFIX'], '/ ');
 		}
 		if (isset($_SERVER['REQUEST_URI'])) {
 			$path = $_SERVER['REQUEST_URI'];
@@ -213,6 +235,30 @@ class Minz_Request {
 			return $_GET[$param];
 		} else {
 			return $default;
+		}
+	}
+
+	/**
+	 * Allows receiving POST data as application/json
+	 */
+	private static function initJSON() {
+		$contentType = isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : '';
+		if ($contentType == '') {	//PHP < 5.3.16
+			$contentType = isset($_SERVER['HTTP_CONTENT_TYPE']) ? $_SERVER['HTTP_CONTENT_TYPE'] : '';
+		}
+		$contentType = strtolower(trim($contentType));
+		if ($contentType === 'application/json') {
+			$ORIGINAL_INPUT = file_get_contents('php://input', false, null, 0, 1048576);
+			if ($ORIGINAL_INPUT != '') {
+				$json = json_decode($ORIGINAL_INPUT, true);
+				if ($json != null) {
+					foreach ($json as $k => $v) {
+						if (!isset($_POST[$k])) {
+							$_POST[$k] = $v;
+						}
+					}
+				}
+			}
 		}
 	}
 

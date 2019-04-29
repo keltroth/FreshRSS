@@ -3,12 +3,16 @@ if (php_sapi_name() !== 'cli') {
 	die('FreshRSS error: This PHP script may only be invoked from command line!');
 }
 
-require(dirname(__FILE__) . '/../constants.php');
-require(LIB_PATH . '/lib_rss.php');
+const REGEX_INPUT_OPTIONS = '/^--/';
+const REGEX_PARAM_OPTIONS = '/:*$/';
+
+require(__DIR__ . '/../constants.php');
+require(LIB_PATH . '/lib_rss.php');	//Includes class autoloader
+require(LIB_PATH . '/lib_install.php');
 
 Minz_Configuration::register('system',
 	DATA_PATH . '/config.php',
-	DATA_PATH . '/config.default.php');
+	FRESHRSS_PATH . '/config.default.php');
 FreshRSS_Context::$system_conf = Minz_Configuration::get('system');
 Minz_Translate::init('en');
 
@@ -20,7 +24,7 @@ function fail($message) {
 }
 
 function cliInitUser($username) {
-	if (!ctype_alnum($username)) {
+	if (!FreshRSS_user_Controller::checkUsername($username)) {
 		fail('FreshRSS error: invalid username: ' . $username . "\n");
 	}
 
@@ -46,4 +50,42 @@ function accessRights() {
 function done($ok = true) {
 	fwrite(STDERR, 'Result: ' . ($ok ? 'success' : 'fail') . "\n");
 	exit($ok ? 0 : 1);
+}
+
+function performRequirementCheck($databaseType) {
+	$requirements = checkRequirements($databaseType);
+	if ($requirements['all'] !== 'ok') {
+		$message = 'FreshRSS install failed requirements:' . "\n";
+		foreach ($requirements as $requirement => $check) {
+			if ($check !== 'ok' && !in_array($requirement, array('all', 'pdo', 'message'))) {
+				$message .= '• ' . $requirement . "\n";
+			}
+		}
+		if (!empty($requirements['message'])) {
+			$message .= '• ' . $requirements['message'] . "\n";
+		}
+		fail($message);
+	}
+}
+
+function getLongOptions($options, $regex) {
+	$longOptions = array_filter($options, function($a) use ($regex) {
+		return preg_match($regex, $a);
+	});
+	return array_map(function($a) use ($regex) {
+		return preg_replace($regex, '', $a);
+	}, $longOptions);
+}
+
+function validateOptions($input, $params) {
+	$sanitizeInput = getLongOptions($input, REGEX_INPUT_OPTIONS);
+	$sanitizeParams = getLongOptions($params, REGEX_PARAM_OPTIONS);
+	$unknownOptions = array_diff($sanitizeInput, $sanitizeParams);
+
+	if (0 === count($unknownOptions)) {
+		return true;
+	}
+
+	fwrite(STDERR, sprintf("FreshRSS error: unknown options: %s\n", implode (', ', $unknownOptions)));
+	return false;
 }

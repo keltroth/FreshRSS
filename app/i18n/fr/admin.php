@@ -63,8 +63,12 @@ return array(
 		),
 		'files' => 'Installation des fichiers',
 		'json' => array(
-			'nok' => 'Vous ne disposez pas de JSON (paquet php5-json).',
-			'ok' => 'Vous disposez de l’extension JSON.',
+			'nok' => 'Vous ne disposez pas de l’extension recommendée JSON (paquet php-json).',
+			'ok' => 'Vous disposez de l’extension recommendée JSON.',
+		),
+		'mbstring' => array(
+			'nok' => 'Impossible de trouver la librairie recommandée mbstring pour Unicode.',
+			'ok' => 'Vouz disposez de la librairie recommandée mbstring pour Unicode.',
 		),
 		'minz' => array(
 			'nok' => 'Vous ne disposez pas de la librairie Minz.',
@@ -102,16 +106,23 @@ return array(
 		),
 	),
 	'extensions' => array(
+		'author' => 'Auteur',
+		'community' => 'Extensions utilisateur disponibles',
+		'description' => 'Description',
 		'disabled' => 'Désactivée',
-		'empty_list' => 'Il n’y a aucune extension installée.',
+		'empty_list' => 'Aucune extension installée',
 		'enabled' => 'Activée',
-		'no_configure_view' => 'Cette extension ne peut pas être configurée.',
+		'latest' => 'Installée',
+		'name' => 'Nom',
+		'no_configure_view' => 'Cette extension n’a pas à être configurée',
 		'system' => array(
 			'_' => 'Extensions système',
-			'no_rights' => 'Extension système (vous n’avez aucun droit dessus)',
+			'no_rights' => 'Extensions système (contrôlées par l’administrateur)',
 		),
 		'title' => 'Extensions',
+		'update' => 'Mise à jour disponible',
 		'user' => 'Extensions utilisateur',
+		'version' => 'Version',
 	),
 	'stats' => array(
 		'_' => 'Statistiques',
@@ -151,6 +162,10 @@ return array(
 		'instance-name' => 'Nom de l’instance',
 		'max-categories' => 'Limite de catégories par utilisateur',
 		'max-feeds' => 'Limite de flux par utilisateur',
+		'cookie-duration' => array(
+			'help' => 'en secondes',
+			'number' => 'Durée avant expiration de la session',
+		),
 		'registration' => array(
 			'help' => 'Un chiffre de 0 signifie que l’on peut créer un nombre infini de comptes',
 			'number' => 'Nombre max de comptes',
@@ -168,12 +183,15 @@ return array(
 	'user' => array(
 		'articles_and_size' => '%s articles (%s)',
 		'create' => 'Créer un nouvel utilisateur',
+		'delete_users' => 'Supprimer un utilisateur',
 		'language' => 'Langue',
 		'number' => '%d compte a déjà été créé',
 		'numbers' => '%d comptes ont déjà été créés',
 		'password_form' => 'Mot de passe<br /><small>(pour connexion par formulaire)</small>',
 		'password_format' => '7 caractères minimum',
+		'selected' => 'Utilisateur sélectionné',
 		'title' => 'Gestion des utilisateurs',
+		'update_users' => 'Mettre à jour un utilisateur',
 		'user_list' => 'Liste des utilisateurs',
 		'username' => 'Nom d’utilisateur',
 		'users' => 'Utilisateurs',

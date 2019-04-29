@@ -22,7 +22,7 @@
 			<label class="group-name" for="newPasswordPlain"><?php echo _t('conf.profile.password_form'); ?></label>
 			<div class="group-controls">
 				<div class="stick">
-					<input type="password" id="newPasswordPlain" name="newPasswordPlain" autocomplete="off" pattern=".{7,}" <?php echo cryptAvailable() ? '' : 'disabled="disabled" '; ?>/>
+					<input type="password" id="newPasswordPlain" name="newPasswordPlain" autocomplete="new-password" pattern=".{7,}" <?php echo cryptAvailable() ? '' : 'disabled="disabled" '; ?>/>
 					<a class="btn toggle-password" data-toggle="newPasswordPlain"><?php echo _i('key'); ?></a>
 				</div>
 				<?php echo _i('help'); ?> <?php echo _t('conf.profile.password_format'); ?>
@@ -35,10 +35,23 @@
 			<label class="group-name" for="apiPasswordPlain"><?php echo _t('conf.profile.password_api'); ?></label>
 			<div class="group-controls">
 				<div class="stick">
-					<input type="password" id="apiPasswordPlain" name="apiPasswordPlain" autocomplete="off" pattern=".{7,}" <?php echo cryptAvailable() ? '' : 'disabled="disabled" '; ?>/>
+					<input type="password" id="apiPasswordPlain" name="apiPasswordPlain" autocomplete="new-password" pattern=".{7,}" <?php echo cryptAvailable() ? '' : 'disabled="disabled" '; ?>/>
 					<a class="btn toggle-password" data-toggle="apiPasswordPlain"><?php echo _i('key'); ?></a>
 				</div>
-				<?php echo _i('help'); ?> <kbd><a href="../api/"><?php echo Minz_Url::display('/api/greader.php', 'html', true); ?></a></kbd>
+				<?php echo _i('help'); ?> <kbd><a href="../api/"><?php echo Minz_Url::display('/api/', 'html', true); ?></a></kbd>
+			</div>
+		</div>
+		<?php } ?>
+
+		<?php if (FreshRSS_Auth::accessNeedsAction()) { ?>
+		<div class="form-group">
+			<label class="group-name" for="token"><?php echo _t('admin.auth.token'); ?></label>
+			<?php $token = FreshRSS_Context::$user_conf->token; ?>
+			<div class="group-controls">
+				<input type="text" id="token" name="token" value="<?php echo $token; ?>" placeholder="<?php echo _t('gen.short.blank_to_disable'); ?>"<?php
+					echo FreshRSS_Auth::accessNeedsAction() ? '' : ' disabled="disabled"'; ?> data-leave-validation="<?php echo $token; ?>"/>
+				<?php echo _i('help'); ?> <?php echo _t('admin.auth.token_help'); ?>
+				<kbd><?php echo Minz_Url::display(array('a' => 'rss', 'params' => array('user' => Minz_Session::param('currentUser'), 'token' => $token, 'hours' => FreshRSS_Context::$user_conf->since_hours_posts_per_rss)), 'html', true); ?></kbd>
 			</div>
 		</div>
 		<?php } ?>

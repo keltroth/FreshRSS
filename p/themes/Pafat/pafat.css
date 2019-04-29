@@ -1,16 +1,10 @@
 @charset "UTF-8";
 
-/*=== FONTS */
-@font-face {
-	font-family: "OpenSans";
-	src: url("../fonts/openSans.woff") format("woff");
-}
-
 /*=== GENERAL */
 /*============*/
 html, body {
 	height: 100%;
-	font-family: "OpenSans", "Cantarell", "Helvetica", "Arial", sans-serif;
+	font-family: "OpenSans", "Cantarell", "Helvetica", "Arial", "PingFang SC", "Microsoft YaHei", sans-serif;
 	background: #fafafa;
 	color : #666;
 }
@@ -146,8 +140,8 @@ form th {
 .stick .dropdown + .dropdown > .btn {
 	border-left: none;
 
-}	
-	
+}
+
 .stick .btn + .dropdown > .btn {
 	border-left: none;
 	border-radius: 0 3px 3px 0;
@@ -157,6 +151,7 @@ form th {
 	display: inline-block;
 	min-height: 29px;
 	min-width: 15px;
+	line-height: 25px;
 	margin: 0;
 	padding: 1px 5px;
 	background: #fff;
@@ -168,12 +163,6 @@ form th {
 	cursor: pointer;
 	overflow: hidden;
 }
-
-a.btn {
-	min-height: 25px;
-	line-height: 25px;
-}
-
 
 a.btn {
 	min-height: 25px;
@@ -338,20 +327,13 @@ a.btn {
 	font-weight: bold;
 	text-align: left;
 }
-.dropdown-menu > .item {
-}
 
-.dropdown-menu > .item > a {
-	padding: 0 22px;
-	line-height: 2.5em;
-	color: #666;
-	font-size: 0.8rem;
-}
-
+.dropdown-menu > .item > a,
 .dropdown-menu > .item > span,
 .dropdown-menu > .item > .as-link {
 	padding: 0 22px;
-	line-height: 2em;
+	line-height: 2.5em;
+	color: #666;
 	font-size: 0.8rem;
 }
 
@@ -550,7 +532,7 @@ a.btn {
 	text-decoration: none;
 	color : #C5C6CA;
 }
- 
+
 .header > .item.search input {
 	width: 230px;
 	height : 29px;
@@ -861,7 +843,7 @@ a.btn {
 /*=== "Load more" part */
 #bigMarkAsRead {
 	text-align: center;
-	text-decoration: none;	
+	text-decoration: none;
 	color: #666;
 	background: #fafafa;
 }

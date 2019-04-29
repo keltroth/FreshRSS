@@ -52,6 +52,7 @@ class FreshRSS_stats_Controller extends Minz_ActionController {
 	 */
 	public function indexAction() {
 		$statsDAO = FreshRSS_Factory::createStatsDAO();
+		Minz_View::prependScript(Minz_Url::display('/scripts/jquery.min.js?' . @filemtime(PUBLIC_PATH . '/scripts/jquery.min.js')));
 		Minz_View::appendScript(Minz_Url::display('/scripts/flotr2.min.js?' . @filemtime(PUBLIC_PATH . '/scripts/flotr2.min.js')));
 		$this->view->repartition = $statsDAO->calculateEntryRepartition();
 		$entryCount = $statsDAO->calculateEntryCount();
@@ -131,7 +132,7 @@ class FreshRSS_stats_Controller extends Minz_ActionController {
 	 */
 	public function repartitionAction() {
 		$statsDAO = FreshRSS_Factory::createStatsDAO();
-		$categoryDAO = new FreshRSS_CategoryDAO();
+		$categoryDAO = FreshRSS_Factory::createCategoryDao();
 		$feedDAO = FreshRSS_Factory::createFeedDao();
 		Minz_View::appendScript(Minz_Url::display('/scripts/flotr2.min.js?' . @filemtime(PUBLIC_PATH . '/scripts/flotr2.min.js')));
 		$id = Minz_Request::param('id', null);

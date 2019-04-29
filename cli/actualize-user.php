@@ -1,12 +1,14 @@
 #!/usr/bin/php
 <?php
-require('_cli.php');
+require(__DIR__ . '/_cli.php');
 
-$options = getopt('', array(
-		'user:',
-	));
+$params = array(
+	'user:',
+);
 
-if (empty($options['user'])) {
+$options = getopt('', $params);
+
+if (!validateOptions($argv, $params) || empty($options['user'])) {
 	fail('Usage: ' . basename(__FILE__) . " --user username");
 }
 
@@ -14,9 +16,9 @@ $username = cliInitUser($options['user']);
 
 fwrite(STDERR, 'FreshRSS actualizing user “' . $username . "”…\n");
 
-list($nbUpdatedFeeds, $feed) = FreshRSS_feed_Controller::actualizeFeed(0, '', true);
+list($nbUpdatedFeeds, $feed, $nbNewArticles) = FreshRSS_feed_Controller::actualizeFeed(0, '', true);
 
-echo "FreshRSS actualized $nbUpdatedFeeds feeds for $username\n";
+echo "FreshRSS actualized $nbUpdatedFeeds feeds for $username ($nbNewArticles new articles)\n";
 
 invalidateHttpCache($username);
 

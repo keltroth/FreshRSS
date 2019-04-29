@@ -1,13 +1,22 @@
 <?php
+$this->partial('aside_feed');
 $this->partial('nav_menu');
+
+flush();
+if (isset($this->callbackBeforeEntries)) {
+	call_user_func($this->callbackBeforeEntries, $this);
+}
 
 if (!empty($this->entries)) {
 	$lazyload = FreshRSS_Context::$user_conf->lazyload;
 	$content_width = FreshRSS_Context::$user_conf->content_width;
 ?>
 
-<div id="stream" class="reader"><?php
-	foreach ($this->entries as $item) {
+<div id="stream" class="reader">
+	<div id="new-article">
+		<a href="<?php echo Minz_Url::display(Minz_Request::currentRequest()); ?>"><?php echo _t('gen.js.new_article'); /* TODO: move string in JS*/ ?></a>
+	</div>
+	<?php foreach ($this->entries as $item) {
 		$item = Minz_ExtensionManager::callHook('entry_before_display', $item);
 		if (is_null($item)) {
 			continue;
@@ -18,16 +27,40 @@ if (!empty($this->entries)) {
 				<?php
 					$feed = FreshRSS_CategoryDAO::findFeed($this->categories, $item->feed());	//We most likely already have the feed object in cache
 					if (empty($feed)) $feed = $item->feed(true);
+					$favoriteUrl = array('c' => 'entry', 'a' => 'bookmark', 'params' => array('id' => $item->id()));
+					if ($item->isFavorite()) {
+						$favoriteUrl['params']['is_favorite'] = 0;
+					}
+					$readUrl = array('c' => 'entry', 'a' => 'read', 'params' => array('id' => $item->id()));
+					if ($item->isRead()) {
+						$readUrl['params']['is_read'] = 0;
+					}
 				?>
-				<a href="<?php echo $item->link(); ?>">
+				<a class="read" href="<?php echo Minz_Url::display($readUrl); ?>">
+					<?php echo _i($item->isRead() ? 'read' : 'unread'); ?>
+				</a>
+				<a class="bookmark" href="<?php echo Minz_Url::display($favoriteUrl); ?>">
+					<?php echo _i($item->isFavorite() ? 'starred' : 'non-starred'); ?>
+				</a>
+				<a class="website" href="<?php echo _url('index', 'reader', 'get', 'f_' . $feed->id()); ?>">
 					<img class="favicon" src="<?php echo $feed->favicon(); ?>" alt="✇" /> <span><?php echo $feed->name(); ?></span>
 				</a>
-				<h1 class="title"><?php echo $item->title(); ?></h1>
+				<h1 class="title"><a target="_blank" rel="noreferrer" class="go_website" href="<?php echo $item->link(); ?>"><?php echo $item->title(); ?></a></h1>
 
 				<div class="author"><?php
-					$author = $item->author();
-					echo $author != '' ? _t('gen.short.by_author', $author) . ' — ' : '',
-						$item->date();
+					$authors = $item->authors();
+					if (is_array($authors)):
+						$first = true;
+						foreach ($authors as $author):
+							echo $first ? _t('gen.short.by_author') . ' ' : '· ';
+							$first = false;
+				?>
+<em><a href="<?php echo _url('index', 'index', 'search', 'author:' . str_replace(' ', '+', htmlspecialchars_decode($author, ENT_QUOTES))); ?>"><?php echo $author; ?></a></em>
+				<?php
+						endforeach;
+						echo ' — ';
+					endif;
+					echo $item->date();
 				?></div>
 
 				<?php echo $item->content(); ?>
