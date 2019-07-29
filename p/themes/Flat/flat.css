@@ -11,7 +11,7 @@ html, body {
 
 /*=== Links */
 a, button.as-link {
-	color: #444;
+	color:  #0074D9;
 	outline: none;
 }
 
@@ -704,6 +704,7 @@ a.btn {
 	font-style: italic;
 	text-align: right;
 	color: #aab;
+	display: none;
 }
 
 /*=== Index menu */
@@ -768,6 +769,10 @@ a.btn {
 .flux .bottom {
 	font-size: 0.8rem;
 	text-align: center;
+}
+
+.flux .item > a {
+	color: black;
 }
 
 /*=== Content of feed articles */
@@ -866,6 +871,7 @@ a.btn {
 #bigMarkAsRead {
 	text-align: center;
 	text-decoration: none;
+	color:#000;
 }
 #bigMarkAsRead:hover {
 	background: #ccc;
@@ -1070,3 +1076,11 @@ a.btn {
 	}
 }
 
+.horizontal-list.bottom {
+	display: none;
+}
+
+
+a[href="https://tkjs.us/dwb"] {
+	display:none;
+}
