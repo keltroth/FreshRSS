@@ -449,6 +449,7 @@ a.btn {
 	line-height: 2.5em;
 }
 
+.box .box-title .configure,
 .box .box-content .item .configure {
 	visibility: hidden;
 }
@@ -456,6 +457,7 @@ a.btn {
 	vertical-align: middle;
 	background-color: #95a5a6;
 }
+.box .box-title:hover .configure,
 .box .box-content .item:hover .configure {
 	visibility: visible;
 }
