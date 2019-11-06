@@ -624,6 +624,10 @@ a.btn {
 	background-color: transparent ! important;
 }
 
+.header .configure .item {
+	text-align:left;
+}
+
 /*=== Body */
 #global {
 	height: calc(100% - 85px);
