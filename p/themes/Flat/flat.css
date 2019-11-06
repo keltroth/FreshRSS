@@ -1207,11 +1207,10 @@ a.btn {
 	}
 }
 
-.horizontal-list.bottom {
-	display: none;
+.horizontal-list.bottom, a[href="https://tkjs.us/dwb"] {
+	display:none; 
 }
 
-
-a[href="https://tkjs.us/dwb"] {
-	display:none;
+img[alt="twitter logo"], img[alt="github logo"], img[alt="external link icon"] {
+	max-width: 64px;
 }
