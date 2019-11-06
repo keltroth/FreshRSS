@@ -168,7 +168,7 @@ form th {
 .stick .dropdown + .btn,
 .stick .dropdown + input,
 .stick .dropdown + .dropdown > .btn {
-	border-left-width: 1px;
+	border-left-width: 0px;
 	border-left-style: solid;
 }
 
