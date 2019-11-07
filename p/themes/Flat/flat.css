@@ -148,6 +148,7 @@ form th {
 
 .stick input,
 .stick .btn {
+	font-size: 0.9rem;
 }
 
 .stick .btn:first-child,
