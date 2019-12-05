@@ -1,0 +1,7 @@
+{
+  "name": "Djangounet design",
+  "author": "Django Janny",
+  "description": "Basé sur le thème Flat",
+  "version": 0.1,
+  "files": ["_template.css", "djangounet.css"]
+}
