@@ -34,6 +34,7 @@ var context;
 (function parseJsonVars() {
 	const jsonVars = document.getElementById('jsonVars'),
 		json = JSON.parse(jsonVars.innerHTML);
+	console.log(json);
 	jsonVars.outerHTML = '';
 	context = json.context;
 	context.ajax_loading = false;
