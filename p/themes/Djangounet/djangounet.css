@@ -95,7 +95,6 @@ form th {
 /*===============*/
 /*=== Forms */
 .form-group {
-	padding: 5px;
 	border: 1px solid transparent;
 }
 
@@ -103,12 +102,6 @@ form th {
 	content: "";
 	display: block;
 	clear: both;
-}
-
-.form-group:hover {
-	background: #fff;
-	border: 1px solid #eee;
-	border: 1px solid #eee;
 }
 
 .form-group.form-actions {
@@ -746,7 +739,11 @@ a.btn {
 
 .prompt form {
 	margin: 10px auto 20px auto;
-	width: 200px;
+	width: 500px;
+	border: 1px solid #eee;
+	background-color: #0C2134;
+	padding: 20px;
+	border-radius: 5px;
 }
 
 .prompt input {
@@ -883,6 +880,10 @@ a.btn {
 .content {
 	padding: 20px 10px;
 	font-size: 1.4em;
+}
+
+.content.thin {
+	max-width: 70%;
 }
 
 .content > h1 {
