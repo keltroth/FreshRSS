@@ -2,7 +2,7 @@
 
 See also [the FreshRSS releases](https://github.com/FreshRSS/FreshRSS/releases).
 
-## 2025-06-0X FreshRSS 1.26.3-dev
+## 2025-06-02 FreshRSS 1.26.3
 
 * Features
 	* Keep sort and order criteria during navigation [#7585](https://github.com/FreshRSS/FreshRSS/pull/7585)

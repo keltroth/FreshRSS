@@ -244,6 +244,7 @@ People are sorted by name so please keep this order.
 * [subic](https://github.com/subic): [contributions](https://github.com/FreshRSS/documentation/pulls?q=is:pr+author:subic)
 * [Tealk](https://github.com/Tealk): [contributions](https://github.com/FreshRSS/FreshRSS/pulls?q=is:pr+author:Tealk), [Web](https://rollenspiel.monster/)
 * [Tets42](https://github.com/Tets42): [contributions](https://github.com/FreshRSS/FreshRSS/pulls?q=is:pr+author:Tets42)
+* [the7thNightmare](https://github.com/the7thNightmare): [contributions](https://github.com/FreshRSS/FreshRSS/pulls?q=is:pr+author:the7thNightmare)
 * [Thelonius Kort](https://github.com/tnt): [contributions](https://github.com/FreshRSS/FreshRSS/pulls?q=is:pr+author:tnt)
 * [Thomas Citharel](https://github.com/tcitworld): [contributions](https://github.com/FreshRSS/FreshRSS/pulls?q=is:pr+author:tomgue), [Web](https://www.tcit.fr/)
 * [Thomas Guesnon](https://github.com/patjennings): [contributions](https://github.com/FreshRSS/FreshRSS/pulls?q=is:pr+author:patjennings), [Web](http://www.thomasguesnon.fr/)
