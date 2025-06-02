@@ -2,7 +2,7 @@
 
 See also [the FreshRSS releases](https://github.com/FreshRSS/FreshRSS/releases).
 
-## 2025-06-XX FreshRSS 1.26.3-dev
+## 2025-06-0X FreshRSS 1.26.3-dev
 
 * Features
 	* Keep sort and order criteria during navigation [#7585](https://github.com/FreshRSS/FreshRSS/pull/7585)
@@ -13,6 +13,9 @@ See also [the FreshRSS releases](https://github.com/FreshRSS/FreshRSS/releases).
 	* Fix newest articles (within last second) not shown [#7577](https://github.com/FreshRSS/FreshRSS/pull/7577)
 	* Fix duplicate HTTP header for POST [#7556](https://github.com/FreshRSS/FreshRSS/pull/7556)
 	* Fix important articles on reader view [#7602](https://github.com/FreshRSS/FreshRSS/pull/7602)
+	* Fix remove last share method [#7613](https://github.com/FreshRSS/FreshRSS/pull/7613)
+	* Fix API handling of default category [#7610](https://github.com/FreshRSS/FreshRSS/pull/7610)
+	* Fix user self-deletion [#7626](https://github.com/FreshRSS/FreshRSS/pull/7626)
 	* Move PHP minimum version check [#7560](https://github.com/FreshRSS/FreshRSS/pull/7560)
 * Security
 	* Fix encoding of themes [#7565](https://github.com/FreshRSS/FreshRSS/pull/7565)
@@ -26,9 +29,12 @@ See also [the FreshRSS releases](https://github.com/FreshRSS/FreshRSS/releases).
 	* Use HTTP `Cache-Control: immutable` for some files [#7552](https://github.com/FreshRSS/FreshRSS/pull/7552)
 	* Drop Apache 2.2 (only support Apache 2.4+) [#7561](https://github.com/FreshRSS/FreshRSS/pull/7561)
 * I18n
+	* Improve Indonesian [#7622](https://github.com/FreshRSS/FreshRSS/pull/7622)
 	* Improve Polish [#7587](https://github.com/FreshRSS/FreshRSS/pull/7587)
 * Misc.
 	* Update to PHPMailer 6.10.0 [#7542](https://github.com/FreshRSS/FreshRSS/pull/7542)
+	* Update dev dependencies [#7630](https://github.com/FreshRSS/FreshRSS/pull/7630), [#7631](https://github.com/FreshRSS/FreshRSS/pull/7631), [#7632](https://github.com/FreshRSS/FreshRSS/pull/7632)
+		[#7633](https://github.com/FreshRSS/FreshRSS/pull/7633), [#7634](https://github.com/FreshRSS/FreshRSS/pull/7634), [#7635](https://github.com/FreshRSS/FreshRSS/pull/7635)
 
 
 ## 2025-05-03 FreshRSS 1.26.2
