@@ -2,6 +2,32 @@
 
 FreshRSS offers three methods of Access control: Form Authentication using JavaScript, HTTP based Authentication, or an uncontrolled state with no authentication required.
 
+## Server-side feed fetching & security considerations
+
+FreshRSS fetches RSS feeds using server-side HTTP requests (via the cURL library). This design allows users to subscribe to feeds hosted not just on the public internet, but also on internal or private networks. 
+For example, many users connect FreshRSS to tools like RSS-Bridge, cron jobs, or local automation services such as Node-RED — all of which may run on `localhost` or internal IPs.
+
+In self-hosted, single-user setups, this behavior is expected and usually safe. However, in **multi-user or public-facing instances**, this same functionality can introduce a potential security risk known as **Server-Side Request Forgery (SSRF)**.
+
+In an SSRF scenario, a malicious user could submit a feed URL that points to internal network services, such as:
+
+- `http://127.0.0.1` (loopback)
+- `http://169.254.169.254` (cloud metadata services)
+- Other services not meant to be exposed externally
+
+While FreshRSS does not treat these requests as unsafe by default — since many legitimate use cases depend on them — it’s important to understand the implications if your instance is shared, exposed on the internet, or co-hosted with other services.
+
+### Recommended mitigations for shared/public setups:
+
+- Run FreshRSS behind a firewall or reverse proxy that blocks access to internal IP ranges
+- Use container isolation or a virtual network to prevent access to sensitive endpoints
+- Avoid exposing your FreshRSS instance directly to the internet unless you fully trust all users
+
+These steps are not necessary for trusted, single-user deployments, but are strongly advised in shared environments.
+
+> _Note: For Docker-based deployments, `localhost` refers to the container’s internal network._
+
+
 ## Form Authentication
 
 Form Authentication requires the use of JavaScript. It will work on any supported version of PHP,
