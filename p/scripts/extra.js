@@ -238,11 +238,14 @@ function init_update_feed() {
 			e.preventDefault();
 			faviconExtBtn.disabled = true;
 			fetch(faviconExtBtn.dataset.extensionUrl, {
-				method: "POST",
-				body: new URLSearchParams({
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json; charset=utf-8'
+				},
+				body: JSON.stringify({
 					'_csrf': context.csrf,
 					'extAction': 'query_icon_info',
-					'id': feed_update.dataset.feedId
+					'id': +feed_update.dataset.feedId
 				}),
 			}).then(resp => {
 				if (!resp.ok) {
@@ -274,11 +277,14 @@ function init_update_feed() {
 					el.disabled = true;
 				});
 				await fetch(faviconExtBtn.dataset.extensionUrl, {
-					method: "POST",
-					body: new URLSearchParams({
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json; charset=utf-8'
+					},
+					body: JSON.stringify({
 						'_csrf': context.csrf,
 						'extAction': 'update_icon',
-						'id': feed_update.dataset.feedId
+						'id': +feed_update.dataset.feedId
 					}),
 				});
 				faviconExtBtn.form.onsubmit = null;
