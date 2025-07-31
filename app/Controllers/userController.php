@@ -72,6 +72,10 @@ class FreshRSS_user_Controller extends FreshRSS_ActionController {
 		}
 
 		if (Minz_Request::isPost()) {
+			if (self::reauthRedirect()) {
+				return;
+			}
+
 			$username = Minz_Request::paramString('username');
 			$newPasswordPlain = Minz_User::name() !== $username ? Minz_Request::paramString('newPasswordPlain', true) : '';
 
@@ -190,21 +194,41 @@ class FreshRSS_user_Controller extends FreshRSS_ActionController {
 		}
 	}
 
+	public static function reauthRedirect(): bool {
+		$url_redirect = [
+			'c' => 'user',
+			'a' => 'manage',
+			'params' => [],
+		];
+		$username = Minz_Request::paramStringNull('username');
+		if ($username !== null) {
+			$url_redirect['a'] = 'details';
+			$url_redirect['params']['username'] = $username;
+		}
+		return FreshRSS_Auth::requestReauth($url_redirect);
+	}
+
 	public function purgeAction(): void {
 		if (!FreshRSS_Auth::hasAccess('admin')) {
 			Minz_Error::error(403);
 		}
 
-		if (Minz_Request::isPost()) {
-			$username = Minz_Request::paramString('username');
-
-			if (!FreshRSS_UserDAO::exists($username)) {
-				Minz_Error::error(404);
-			}
-
-			$feedDAO = FreshRSS_Factory::createFeedDao($username);
-			$feedDAO->purge();
+		if (!Minz_Request::isPost()) {
+			Minz_Error::error(403);
 		}
+
+		if (self::reauthRedirect()) {
+			return;
+		}
+
+		$username = Minz_Request::paramString('username');
+
+		if (!FreshRSS_UserDAO::exists($username)) {
+			Minz_Error::error(404);
+		}
+
+		$feedDAO = FreshRSS_Factory::createFeedDao($username);
+		$feedDAO->purge();
 	}
 
 	/**
@@ -213,6 +237,10 @@ class FreshRSS_user_Controller extends FreshRSS_ActionController {
 	public function manageAction(): void {
 		if (!FreshRSS_Auth::hasAccess('admin')) {
 			Minz_Error::error(403);
+		}
+
+		if (self::reauthRedirect()) {
+			return;
 		}
 
 		FreshRSS_View::prependTitle(_t('admin.user.title') . ' · ');
@@ -335,6 +363,10 @@ class FreshRSS_user_Controller extends FreshRSS_ActionController {
 	public function createAction(): void {
 		if (!FreshRSS_Auth::hasAccess('admin') && max_registrations_reached()) {
 			Minz_Error::error(403);
+		}
+
+		if (self::reauthRedirect()) {
+			return;
 		}
 
 		if (Minz_Request::isPost()) {
@@ -602,7 +634,10 @@ class FreshRSS_user_Controller extends FreshRSS_ActionController {
 					$username, FreshRSS_Context::userConf()->passwordHash,
 					$nonce, $challenge
 				);
+			} elseif (self::reauthRedirect()) {
+				return;
 			}
+
 			if ($ok) {
 				$ok &= self::deleteUser($username);
 			}
@@ -647,6 +682,10 @@ class FreshRSS_user_Controller extends FreshRSS_ActionController {
 			Minz_Error::error(403);
 		}
 
+		if (self::reauthRedirect()) {
+			return;
+		}
+
 		$username = Minz_Request::paramString('username');
 		if (!FreshRSS_UserDAO::exists($username)) {
 			Minz_Error::error(404);
@@ -680,6 +719,10 @@ class FreshRSS_user_Controller extends FreshRSS_ActionController {
 	public function detailsAction(): void {
 		if (!FreshRSS_Auth::hasAccess('admin')) {
 			Minz_Error::error(403);
+		}
+
+		if (self::reauthRedirect()) {
+			return;
 		}
 
 		$username = Minz_Request::paramString('username');
