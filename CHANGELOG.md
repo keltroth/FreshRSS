@@ -2,7 +2,7 @@
 
 See also [the FreshRSS releases](https://github.com/FreshRSS/FreshRSS/releases).
 
-## 2025-0X-XX FreshRSS 1.26.4-dev
+## 2025-08-18 FreshRSS 1.27.0
 
 * Features
 	* Implement support for HTTP `429 Too Many Requests` and `503 Service Unavailable`, obey `Retry-After` [#7760](https://github.com/FreshRSS/FreshRSS/pull/7760)
