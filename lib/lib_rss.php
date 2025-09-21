@@ -1100,7 +1100,8 @@ function errorMessageInfo(string $errorTitle, string $error = ''): string {
 		$details = "<pre>{$details}</pre>";
 	}
 
-	header("Content-Security-Policy: default-src 'self'; frame-ancestors 'none'");
+	header("Content-Security-Policy: default-src 'self'; frame-ancestors " .
+		(FreshRSS_Context::systemConf()->attributeString('csp.frame-ancestors') ?? "'none'"));
 	header('Referrer-Policy: same-origin');
 
 	return <<<MSG
